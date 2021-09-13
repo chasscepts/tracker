@@ -1,0 +1,15 @@
+header {
+  padding: 10px;
+  background-color: #62b5e5;
+}
+
+header h1 {
+  color: #fff;
+  text-align: center;
+  font-size: 1.4rem;
+}
+
+.content {
+  margin: auto;
+  max-width: 465px;
+}
