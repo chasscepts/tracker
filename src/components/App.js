@@ -1,5 +1,6 @@
 import GroupPanel from '../containers/GroupPanel';
 import styles from '../assets/css/App.module.css';
+import DatePanel from './DatePanel';
 
 function App() {
   return (
@@ -7,6 +8,7 @@ function App() {
       <header>
         <h1>Track.it</h1>
       </header>
+      <DatePanel />
       <GroupPanel />
     </div>
   );
