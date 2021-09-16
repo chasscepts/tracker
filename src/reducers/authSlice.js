@@ -5,10 +5,10 @@ import axios from 'axios';
 const authSlice = createSlice({
   name: 'auth',
   initialState: {
+    token: null,
     authenticated: false,
     loginError: null,
     registrationError: null,
-    token: null,
     registrationSuccess: false,
   },
   reducers: {
@@ -18,6 +18,7 @@ const authSlice = createSlice({
       state.loginError = null;
       state.registrationError = null;
       state.registrationSuccess = false;
+      state.loginSuccess = true;
     },
     setLoginError: (state, { payload }) => {
       state.authenticated = false;
@@ -60,7 +61,7 @@ export const {
 } = authSlice.actions;
 
 export const login = (email, password) => (dispatch) => {
-  const url = 'http://localhost/auth';
+  const url = 'http://localhost:3000/auth';
   axios({
     url,
     method: 'post',
@@ -76,7 +77,8 @@ export const login = (email, password) => (dispatch) => {
         return;
       }
       if (err.response) {
-        dispatch(setLoginError(err.response.data));
+        const msg = err.response.data.message || err.response.data;
+        dispatch(setLoginError(msg));
         return;
       }
       if (err.request) {
@@ -115,7 +117,7 @@ export const register = (email, password) => (dispatch) => {
         return;
       }
       if (err.response) {
-        dispatch(setRegistrationError(err.response.data));
+        dispatch(setRegistrationError(err.response.data.message || err.response.data));
         return;
       }
       if (err.request) {
@@ -136,6 +138,8 @@ export const register = (email, password) => (dispatch) => {
       console.log(err);
     });
 };
+
+export const selectToken = (state) => state.auth.token;
 
 export const selectAuthenticated = (state) => state.auth.authenticated;
 
