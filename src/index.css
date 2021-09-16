@@ -1,13 +1,14 @@
-body {
+body, html {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+  color:#67899c;
+  font-size: 14px;
+  font-family: 'Helvetica Neue', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans',
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   box-sizing: border-box;
 }
-
 
 *,
 *::before,
@@ -26,4 +27,11 @@ h4,
 h5,
 h6 {
   margin: 0;
+}
+
+input,
+textarea,
+select,
+button {
+  outline: none;
 }
