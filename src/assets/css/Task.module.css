@@ -1,0 +1,16 @@
+.btn {
+  outline: none;
+  border: none;
+  display: block;
+  background-color: transparent;
+}
+
+.wrap {
+  display: flex;
+  align-items: center;
+  height: 48px;
+}
+
+.icon {
+  height: 100%;
+}
