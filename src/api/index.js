@@ -19,6 +19,16 @@ const normalizeError = (err) => {
   return { message: 'An unknown error encountered. Please try again.' };
 };
 
+const instantiate = (token) => {
+  const instance = axios.create({
+    baseURL: 'http://localhost:3000/',
+    responseType: 'json',
+  });
+  instance.defaults.headers.common.Authorization = `Bearer ${token}`;
+
+  return instance;
+};
+
 /**
  *
  * @param {axios} instance An instance of axios to use for this request
@@ -47,18 +57,8 @@ const post = (instance, path, data) => new Promise((resolve, reject) => {
 });
 
 const api = {
-  getFetcher: (token) => {
-    const instance = axios.create({
-      baseURL: 'http:localhost:3000/',
-      responseType: 'json',
-    });
-    instance.defaults.headers.common.Authorization = `Bearer ${token}`;
-
-    return {
-      getGroups: () => get(instance, '/groups'),
-      updateTask: (title) => post(instance, '/tasks', { title }),
-    };
-  },
+  getGroups: (token) => get(instantiate(token), '/groups'),
+  updateTask: (token, title) => post(instantiate(token), '/tasks', { title }),
 };
 
 export default api;

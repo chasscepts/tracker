@@ -1,5 +1,7 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice } from '@reduxjs/toolkit';
+import api from '../api';
 
+/* eslint-disable no-param-reassign */
 const tasksSlice = createSlice({
   name: 'tasks',
   initialState: {
@@ -27,6 +29,7 @@ const tasksSlice = createSlice({
     },
   },
 });
+/* eslint-enable no-param-reassign */
 
 export const {
   setGroups,
@@ -40,21 +43,25 @@ export const selectGroupsLoading = (state) => state.tasks.groupsLoading;
 
 export const selectGroupsError = (state) => state.tasks.groupsError;
 
-export const loadGroups = () => (getState, dispatch) => {
+export const selectTasks = (state) => state.tasks.tasks;
+
+export const loadGroups = () => (dispatch, getState) => {
   const state = getState();
-  if (state.tasks.groups) return;
+  if (state.tasks.groups || state.tasks.groupsLoading) return;
 
-  const { auth: { fetcher } } = state;
+  const { auth: { user } } = state;
 
-  if (!fetcher) {
+  if (!user) {
     dispatch(setGroupsError('You must be logged in to fetch groups'));
     return;
   }
 
   dispatch(setGroupsLoading(true));
 
-  fetcher.getGroups()
-    .then((groups) => dispatch(setGroups(groups)))
+  api.getGroups(user.token)
+    .then((groups) => {
+      dispatch(setGroups(groups));
+    })
     .catch((err) => setGroupsError(err.message));
 };
 
