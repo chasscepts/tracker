@@ -5,16 +5,16 @@ import axios from 'axios';
 const authSlice = createSlice({
   name: 'auth',
   initialState: {
-    token: null,
+    user: null,
     authenticated: false,
     loginError: null,
     registrationError: null,
     registrationSuccess: false,
   },
   reducers: {
-    setToken: (state, { payload }) => {
+    setUser: (state, { payload }) => {
       state.authenticated = true;
-      state.token = payload;
+      state.user = payload;
       state.loginError = null;
       state.registrationError = null;
       state.registrationSuccess = false;
@@ -22,28 +22,30 @@ const authSlice = createSlice({
     },
     setLoginError: (state, { payload }) => {
       state.authenticated = false;
-      state.token = null;
+      state.user = null;
       state.loginError = payload;
       state.registrationError = null;
       state.registrationSuccess = false;
     },
+    clearLoginError: (state) => {
+      state.loginError = null;
+    },
     setRegistrationError: (state, { payload }) => {
       state.authenticated = false;
-      state.token = null;
+      state.user = null;
       state.loginError = null;
       state.registrationError = payload;
       state.registrationSuccess = false;
     },
-    setRegistrationSuccess: (state) => {
-      state.authenticated = false;
-      state.token = null;
-      state.loginError = null;
+    clearRegistrationError: (state) => {
       state.registrationError = null;
-      state.registrationSuccess = true;
+    },
+    setRegistrationSuccess: (state, { payload }) => {
+      state.registrationSuccess = payload;
     },
     logout: (state) => {
       state.authenticated = false;
-      state.token = null;
+      state.user = null;
       state.loginError = null;
       state.registrationError = null;
       state.registrationSuccess = false;
@@ -53,9 +55,11 @@ const authSlice = createSlice({
 /* eslint-enable no-param-reassign */
 
 export const {
-  setToken,
+  setUser,
   setLoginError,
+  clearLoginError,
   setRegistrationError,
+  clearRegistrationError,
   setRegistrationSuccess,
   logout,
 } = authSlice.actions;
@@ -69,7 +73,7 @@ export const login = (email, password) => (dispatch) => {
     data: { email, password },
   })
     .then((res) => {
-      dispatch(setToken(res.data.token));
+      dispatch(setUser(res.data.user));
     })
     .catch((err) => {
       if (!err) {
@@ -101,7 +105,7 @@ export const login = (email, password) => (dispatch) => {
 };
 
 export const register = (email, password) => (dispatch) => {
-  const url = 'http://localhost/auth/register';
+  const url = 'http://localhost:3000/auth/register';
   axios({
     url,
     method: 'post',
@@ -109,7 +113,7 @@ export const register = (email, password) => (dispatch) => {
     data: { email, password },
   })
     .then(() => {
-      dispatch(setRegistrationSuccess());
+      dispatch(setRegistrationSuccess(true));
     })
     .catch((err) => {
       if (!err) {
@@ -139,11 +143,13 @@ export const register = (email, password) => (dispatch) => {
     });
 };
 
-export const selectToken = (state) => state.auth.token;
+export const selectUser = (state) => state.auth.user;
 
 export const selectAuthenticated = (state) => state.auth.authenticated;
 
 export const selectLoginError = (state) => state.auth.loginError;
+
+export const selectRegistrationSuccess = (state) => state.auth.registrationSuccess;
 
 export const selectRegistrationError = (state) => state.auth.registrationError;
 
