@@ -1,5 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import axios from 'axios';
+import api from '../api';
 
 /* eslint-disable no-param-reassign */
 const authSlice = createSlice({
@@ -10,6 +11,7 @@ const authSlice = createSlice({
     loginError: null,
     registrationError: null,
     registrationSuccess: false,
+    fetcher: null,
   },
   reducers: {
     setUser: (state, { payload }) => {
@@ -19,6 +21,7 @@ const authSlice = createSlice({
       state.registrationError = null;
       state.registrationSuccess = false;
       state.loginSuccess = true;
+      state.fetcher = api.getFetcher(payload.token);
     },
     setLoginError: (state, { payload }) => {
       state.authenticated = false;
