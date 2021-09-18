@@ -58,6 +58,17 @@ const post = (instance, path, data) => new Promise((resolve, reject) => {
 
 const api = {
   getGroups: (token) => get(instantiate(token), '/groups'),
+  getTasks: (token, start, end) => {
+    let path = '/tasks';
+    if (start) {
+      path = `${path}?start=${start}`;
+      if (end) {
+        path = `${path}&end=${end}`;
+      }
+    }
+
+    return get(instantiate(token), path);
+  },
   updateTask: (token, title) => post(instantiate(token), '/tasks', { title }),
 };
 

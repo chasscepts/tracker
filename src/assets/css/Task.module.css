@@ -2,11 +2,13 @@
   outline: none;
   border: none;
   display: block;
+  margin-bottom: 20px;
   background-color: transparent;
 }
 
 .wrap {
   display: flex;
+  justify-content: center;
   align-items: center;
   height: 48px;
 }

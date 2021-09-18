@@ -1,12 +1,15 @@
 import { useDispatch, useSelector } from 'react-redux';
-import GroupStatus from '../components/GroupStatus';
-import LoadingPanel from '../components/LoadingPanel';
-import { loadGroups, selectGroups, selectTasks } from '../reducers/tasksSlice';
+import GroupStatus from './GroupStatus';
+import LoadingPanel from './LoadingPanel';
+import {
+  loadGroups, selectDate, selectGroups, selectTasks,
+} from '../reducers/tasksSlice';
+import { taskDuration } from '../utilities';
 
 const styles = {
   container: {
     display: 'flex',
-    justifyContent: 'space-between',
+    justifyContent: 'space-around',
     padding: '10px',
   },
 };
@@ -14,6 +17,7 @@ const styles = {
 export default function GroupPanel() {
   const groups = useSelector(selectGroups);
   const tasks = useSelector(selectTasks);
+  const date = useSelector(selectDate);
   const dispatch = useDispatch();
 
   dispatch(loadGroups());
@@ -27,7 +31,7 @@ export default function GroupPanel() {
   if (tasks) {
     groups.forEach((g) => {
       const duration = tasks.reduce((accm, current) => {
-        if (current.id === g.id) return accm + current.entry.duration;
+        if (current.id === g.id) return accm + taskDuration(current, date);
         return accm;
       }, 0);
       filtered.push({ ...g, duration });
