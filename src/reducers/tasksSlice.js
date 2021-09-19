@@ -107,7 +107,7 @@ export const loadTasks = (date) => (dispatch, getState) => {
 
   dispatch(setTasksLoading());
 
-  api.getTasks(user.token, date)
+  api.getTasks(user.token, { date })
     .then((tasks) => {
       dispatch(setTasks(tasks));
       dispatch(updateTasksCache({ date, tasks }));

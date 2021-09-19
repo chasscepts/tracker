@@ -30,7 +30,6 @@ const instantiate = (token) => {
 };
 
 /**
- *
  * @param {axios} instance An instance of axios to use for this request
  * @param {string} path relative url
  * @returns Promise that resolves to fetched data when request is successful
@@ -43,7 +42,6 @@ const get = (instance, path) => new Promise((resolve, reject) => {
 });
 
 /**
- *
  * @param {axios} instance An instance of axios to use for this request
  * @param {string} path relative url
  * @param {{ string: any }} data sent in body of this post
@@ -56,20 +54,38 @@ const post = (instance, path, data) => new Promise((resolve, reject) => {
     .catch((err) => reject(normalizeError(err)));
 });
 
+/**
+ * @param {axios} instance An instance of axios to use for this request
+ * @param {string} path relative url
+ * @param {{ string: any }} data sent in body of this put
+ * @returns Promise that resolves when request is successful
+ * and rejects with error when request fails
+ */
+const put = (instance, path, data) => new Promise((resolve, reject) => {
+  instance.put(path, data)
+    .then((res) => resolve(res.data))
+    .catch((err) => reject(normalizeError(err)));
+});
+
 const api = {
   getGroups: (token) => get(instantiate(token), '/groups'),
-  getTasks: (token, start, end) => {
+  getTasks: (token, { date, start, end }) => {
     let path = '/tasks';
-    if (start) {
+    if (date) {
+      path = `${path}?date=${date}`;
+    } else if (start) {
       path = `${path}?start=${start}`;
       if (end) {
         path = `${path}&end=${end}`;
       }
+    } else if (end) {
+      path = `${path}?end=${end}`;
     }
 
     return get(instantiate(token), path);
   },
   updateTask: (token, title) => post(instantiate(token), '/tasks', { title }),
+  updateEntry: (token, entry, duration) => put(instantiate(token), `/entries/${entry.id}`, { duration: entry.duration + duration }),
 };
 
 export default api;

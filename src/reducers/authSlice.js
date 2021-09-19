@@ -98,9 +98,6 @@ export const login = (email, password) => (dispatch) => {
         return;
       }
       dispatch(setLoginError('Unknown error encountered. Please try again.'));
-    })
-    .catch((err) => {
-      console.log(err);
     });
 };
 
@@ -137,9 +134,6 @@ export const register = (email, password) => (dispatch) => {
         return;
       }
       dispatch(setRegistrationError('An unknown error encountered. Please try again.'));
-    })
-    .catch((err) => {
-      console.log(err);
     });
 };
 

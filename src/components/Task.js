@@ -1,31 +1,38 @@
 import PropTypes from 'prop-types';
 import styles from '../assets/css/Task.module.css';
-import { taskDuration } from '../utilities';
+import { dates } from '../utilities';
 import icons from '../utilities/icons';
 
-export default function Task({ task, date }) {
+export default function Task({ task, index, onClick }) {
+  const handleClick = () => {
+    onClick(index);
+  };
+
   return (
-    <button type="button" className={styles.btn}>
-      <div className={styles.wrap}>
-        <img src={icons(task.title)} className={styles.icon} alt={task.title} />
-        <div>
-          <div>{task.title}</div>
-          <div>{taskDuration(task, date)}</div>
+    <div className={styles.container}>
+      <button type="button" className={styles.btn} onClick={handleClick}>
+        <div className={styles.wrap}>
+          <img src={icons(task.title)} className={styles.icon} alt={task.title} />
+          <div>
+            <div className={styles.title}>{task.title}</div>
+            <div>{dates.timeString(task.entry.duration)}</div>
+          </div>
         </div>
-      </div>
-    </button>
+      </button>
+    </div>
   );
 }
 
 Task.propTypes = {
-  date: PropTypes.string.isRequired,
   task: PropTypes.shape({
     id: PropTypes.number.isRequired,
     title: PropTypes.string.isRequired,
-    entries: PropTypes.arrayOf(PropTypes.shape({
+    entry: PropTypes.shape({
       id: PropTypes.number.isRequired,
       entry_date: PropTypes.string.isRequired,
       duration: PropTypes.number.isRequired,
-    })).isRequired,
+    }).isRequired,
   }).isRequired,
+  onClick: PropTypes.func.isRequired,
+  index: PropTypes.number.isRequired,
 };

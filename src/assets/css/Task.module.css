@@ -1,8 +1,15 @@
+.container {
+  padding: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .btn {
   outline: none;
   border: none;
   display: block;
-  margin-bottom: 20px;
+  cursor: pointer;
   background-color: transparent;
 }
 
@@ -15,4 +22,8 @@
 
 .icon {
   height: 100%;
+}
+
+.title {
+  text-align: left;
 }
