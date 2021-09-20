@@ -11,9 +11,11 @@ const tasksSlice = createSlice({
     groupsLoading: false,
     groupsError: null,
     tasksCache: {},
-    tasks: null,
+    tasks: [],
     tasksLoading: false,
     tasksError: null,
+    createRequestCount: 0,
+    createError: null,
   },
   reducers: {
     setDate: (state, { payload }) => {
@@ -45,6 +47,19 @@ const tasksSlice = createSlice({
     updateTasksCache: (state, { payload: { date, tasks } }) => {
       state.tasksCache[date] = tasks;
     },
+    addCreateTaskRequest: (state) => {
+      state.createRequestCount += 1;
+    },
+    addTask: (state, { payload }) => {
+      const tasks = state.tasksCache[dates.today()];
+      tasks.push(payload);
+      if (state.createRequestCount > 0) {
+        state.createRequestCount -= 1;
+      }
+    },
+    setCreateTaskError: (state, { payload }) => {
+      state.createError = payload;
+    },
   },
 });
 /* eslint-enable no-param-reassign */
@@ -58,6 +73,9 @@ export const {
   setTasksLoading,
   setTasksError,
   updateTasksCache,
+  addTask,
+  addCreateTaskRequest,
+  setCreateTaskError,
 } = tasksSlice.actions;
 
 export const selectDate = (state) => state.tasks.date;
@@ -69,6 +87,10 @@ export const selectGroupsLoading = (state) => state.tasks.groupsLoading;
 export const selectGroupsError = (state) => state.tasks.groupsError;
 
 export const selectTasks = (state) => state.tasks.tasks;
+
+export const selectCreateTaskError = (state) => state.tasks.createError;
+
+export const selectCreateTaskRequestCount = (state) => state.tasks.createRequestCount;
 
 export const loadGroups = () => (dispatch, getState) => {
   const state = getState();
@@ -113,6 +135,24 @@ export const loadTasks = (date) => (dispatch, getState) => {
       dispatch(updateTasksCache({ date, tasks }));
     })
     .catch((err) => dispatch(setTasksError(err.message)));
+};
+
+export const createTask = (groupId, title) => (dispatch, getState) => {
+  const state = getState();
+  const { auth: { user } } = state;
+
+  if (!user) {
+    dispatch(setCreateTaskError('You must be logged in to create tasks'));
+    return;
+  }
+
+  dispatch(addCreateTaskRequest());
+
+  api.createTask(user.token, groupId, title)
+    .then((task) => {
+      dispatch(addTask(task));
+    })
+    .catch((err) => dispatch(setCreateTaskError(err.message)));
 };
 
 export default tasksSlice.reducer;

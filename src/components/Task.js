@@ -13,9 +13,9 @@ export default function Task({ task, index, onClick }) {
       <button type="button" className={styles.btn} onClick={handleClick}>
         <div className={styles.wrap}>
           <img src={icons(task.title)} className={styles.icon} alt={task.title} />
-          <div>
+          <div className={styles.titleWrap}>
             <div className={styles.title}>{task.title}</div>
-            <div>{dates.timeString(task.entry.duration)}</div>
+            <div className={styles.duration}>{dates.timeString(task.entry.duration)}</div>
           </div>
         </div>
       </button>

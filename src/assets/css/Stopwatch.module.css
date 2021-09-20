@@ -1,6 +1,11 @@
 .container {
   position: relative;
-  padding: 20px;
+  padding: 10px 3px;
+  max-width: 400px;
+  width: 300px;
+  margin: auto;
+  height: 100%;
+  overflow: auto;
 }
 
 .stopwatch {
@@ -60,9 +65,10 @@
 .success,
 .info {
   color: #fff;
-  padding: 15px;
+  padding: 5px;
   text-align: center;
-  font-size: 1.1rem;
+  max-height: 100px;
+  overflow: auto;
 }
 
 .error {
@@ -85,7 +91,7 @@
 }
 
 .loader {
-  padding: 10px;
+  padding: 5px 10px;
   display: flex;
   align-items: center;
   border: 1px solid #ddd;
@@ -94,7 +100,7 @@
 }
 
 .loaderText {
-  margin-left: 30px;
+  margin-left: 10px;
 }
 
 @keyframes rotation {

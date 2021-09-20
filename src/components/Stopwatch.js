@@ -61,7 +61,7 @@ function UpdatingIndicator({ count }) {
 
   return (
     <div className={css.loader}>
-      <LdsRing width={30} color="#62b5e5" />
+      <LdsRing width={20} color="#62b5e5" />
       <div className={css.loaderText}>
         {`Updating ${count} ${entry}`}
       </div>
@@ -140,7 +140,7 @@ export default function Stopwatch() {
       </div>
       <MessageBoard msg={successMsg} type="success" />
       <MessageBoard msg={errorMsg} type="error" />
-      <MessageBoard msg={cocurrentMsg && hasNext} type="error" />
+      <MessageBoard msg={hasNext && cocurrentMsg} type="error" />
       <div className={css.controls}>
         {running && (
         <>

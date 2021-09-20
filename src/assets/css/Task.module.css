@@ -24,6 +24,17 @@
   height: 100%;
 }
 
+.titleWrap {
+  color: #7891a0;
+  margin-left: 10px;
+}
+
 .title {
   text-align: left;
+}
+
+.duration {
+  font-weight: bold;
+  color: #5c7380;
+  margin-top: 10px;
 }
