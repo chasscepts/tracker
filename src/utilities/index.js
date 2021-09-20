@@ -40,6 +40,10 @@ export const dates = {
     const cs = secs === 1 ? 'sec' : 'secs';
     return `${hrs}${ch} ${mins}${cm} ${secs}${cs}`;
   },
+  toDate: (str) => {
+    const parts = str.split('-');
+    return new Date(parts[0], parts[1] - 1, parts[2]);
+  },
 };
 
 export const taskDuration = (task, date) => {

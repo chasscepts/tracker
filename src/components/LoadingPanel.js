@@ -17,10 +17,10 @@ const styles = {
   },
 };
 
-export default function LoadingPanel({ text }) {
+export default function LoadingPanel({ text, width }) {
   return (
     <div style={styles.container}>
-      <LdsRing width={40} color={COLORS.primary} />
+      <LdsRing width={width} color={COLORS.primary} />
       <div style={styles.text}>{text}</div>
     </div>
   );
@@ -28,8 +28,10 @@ export default function LoadingPanel({ text }) {
 
 LoadingPanel.propTypes = {
   text: PropTypes.string,
+  width: PropTypes.number,
 };
 
 LoadingPanel.defaultProps = {
   text: 'Loading ...',
+  width: 40,
 };

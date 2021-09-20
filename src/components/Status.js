@@ -1,68 +1,72 @@
 import PropTypes from 'prop-types';
 
 const barMeasurement = {
-  width: '4.25rem',
-  half: '2.125rem',
-  fourFifth: '3.4rem',
-  twoFifth: '1.7rem',
+  width: 4.25,
+  half: 2.125,
+  fourFifth: 3.4,
+  twoFifth: 1.7,
 };
 
-const bar = {
+const scaleSize = (property, size) => `${barMeasurement[property] * size}rem`;
+
+const bar = (size) => ({
   position: 'absolute',
   height: '100%',
   width: '100%',
   background: '#e8e8e8',
   borderRadius: '100%',
-  clip: `rect(0px, ${barMeasurement.width}, ${barMeasurement.width}, ${barMeasurement.half})`,
-};
+  clip: `rect(0px, ${scaleSize('width', size)}, ${scaleSize('width', size)}, ${scaleSize('half', size)})`,
+});
 
-const progress = (color) => ({
+const progress = (color, size) => ({
   position: 'absolute',
   height: '100%',
   width: '100%',
   borderRadius: '100%',
-  clip: `rect(0px, ${barMeasurement.half}, ${barMeasurement.width}, 0px)`,
+  clip: `rect(0px, ${scaleSize('half', size)}, ${scaleSize('width', size)}, 0px)`,
   background: color,
 });
 
 const styles = {
-  circular: {
-    height: barMeasurement.width,
-    width: barMeasurement.width,
+  circular: (size) => ({
+    height: scaleSize('width', size),
+    width: scaleSize('width', size),
     position: 'relative',
     margin: 'auto',
-  },
-  inner: {
+  }),
+  inner: (size) => ({
     position: 'absolute',
     zIndex: 6,
     top: '50%',
     left: '50%',
-    height: barMeasurement.fourFifth,
-    width: barMeasurement.fourFifth,
-    margin: `-${barMeasurement.twoFifth} 0 0 -${barMeasurement.twoFifth}`,
+    height: scaleSize('fourFifth', size),
+    width: scaleSize('fourFifth', size),
+    margin: `-${scaleSize('twoFifth', size)} 0 0 -${scaleSize('twoFifth', size)}`,
     background: '#fff',
     borderRadius: '100%',
-  },
-  leftBar: {
-    ...bar,
-  },
-  rightBar: {
-    ...bar,
+  }),
+  leftBar: (size) => ({
+    ...bar(size),
+  }),
+  rightBar: (size) => ({
+    ...bar(size),
     transform: 'rotate(180deg)',
     zIndex: 3,
-  },
-  leftProgress: (angle, color) => ({
-    ...progress(color),
+  }),
+  leftProgress: (angle, color, size) => ({
+    ...progress(color, size),
     zIndex: 1,
     transform: `rotate(${angle}deg)`,
   }),
-  rightProgress: (angle, color) => ({
-    ...progress(color),
+  rightProgress: (angle, color, size) => ({
+    ...progress(color, size),
     transform: `rotate(${angle}deg)`,
   }),
 };
 
-export default function Status({ duration, factor, children }) {
+export default function Status({
+  duration, factor, size, children,
+}) {
   const percent = Math.round(duration / 864);
   const angle = (percent) => (180 * percent) / 50;
   const color = percent < 100 / factor ? 'red' : 'green';
@@ -78,14 +82,14 @@ export default function Status({ duration, factor, children }) {
   }
 
   return (
-    <div style={styles.circular}>
-      <div style={styles.inner} />
-      <div style={styles.circle}>
-        <div style={styles.leftBar}>
-          <div style={styles.leftProgress(rotateLeft, color)} />
+    <div style={styles.circular(size)}>
+      <div style={styles.inner(size)} />
+      <div>
+        <div style={styles.leftBar(size)}>
+          <div style={styles.leftProgress(rotateLeft, color, size)} />
         </div>
-        <div style={styles.rightBar}>
-          <div style={styles.rightProgress(rotateRight, color)} />
+        <div style={styles.rightBar(size)}>
+          <div style={styles.rightProgress(rotateRight, color, size)} />
         </div>
       </div>
       {children}
@@ -96,11 +100,13 @@ export default function Status({ duration, factor, children }) {
 Status.propTypes = {
   duration: PropTypes.number,
   factor: PropTypes.number,
-  children: PropTypes.elementType,
+  children: PropTypes.element,
+  size: PropTypes.number,
 };
 
 Status.defaultProps = {
   duration: 0,
   factor: 3,
   children: null,
+  size: 1,
 };

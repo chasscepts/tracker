@@ -6,6 +6,7 @@ import Home from './Home';
 import LoginPage from './LoginPage';
 import RegistrationPage from './RegistrationPage';
 import Stopwatch from './Stopwatch';
+import GroupDetails from './GroupDetails';
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
         <Switch>
           <RestrictedRoute exact path="/" component={Home} />
           <RestrictedRoute path="/timer" component={Stopwatch} />
+          <RestrictedRoute path="/group/:title/:id" component={GroupDetails} />
           <Route path="/login" component={LoginPage} />
           <Route path="/register" component={RegistrationPage} />
         </Switch>

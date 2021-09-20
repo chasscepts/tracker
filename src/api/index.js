@@ -86,6 +86,7 @@ const api = {
   },
   updateTask: (token, title) => post(instantiate(token), '/tasks', { title }),
   updateEntry: (token, entry, duration) => put(instantiate(token), `/entries/${entry.id}`, { duration: entry.duration + duration }),
+  getGroupTasks: (token, id) => get(instantiate(token), `/groups/${id}/tasks?limit=10`),
 };
 
 export default api;
