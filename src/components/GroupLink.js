@@ -1,4 +1,5 @@
 import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
 
 const barMeasurement = {
   width: '4.25rem',
@@ -26,6 +27,9 @@ const progress = (color) => ({
 });
 
 const styles = {
+  link: {
+    color: '#67899c',
+  },
   circular: {
     height: barMeasurement.width,
     width: barMeasurement.width,
@@ -68,13 +72,18 @@ const styles = {
     justifyContent: 'center',
     alignItems: 'center',
     zIndex: '20001',
+    fontWeight: 'bold',
+    fontSize: '1.2rem',
+    color: '#5c7380',
   },
   labelWrap: {
     textAlign: 'center',
   },
 };
 
-export default function GroupStatus({ label, duration, factor }) {
+export default function GroupStatus({
+  id, label, duration, factor,
+}) {
   const percent = Math.round(duration / 864);
   const angle = (percent) => (180 * percent) / 50;
   const color = percent < 100 / factor ? 'red' : 'green';
@@ -90,7 +99,7 @@ export default function GroupStatus({ label, duration, factor }) {
   }
 
   return (
-    <div>
+    <Link to={`/group/${label}/${id}`}>
       <div style={styles.circular}>
         <div style={styles.inner} />
         <div style={styles.circle}>
@@ -106,11 +115,12 @@ export default function GroupStatus({ label, duration, factor }) {
         </div>
       </div>
       <div style={styles.labelWrap}>{label}</div>
-    </div>
+    </Link>
   );
 }
 
 GroupStatus.propTypes = {
+  id: PropTypes.number.isRequired,
   duration: PropTypes.number,
   factor: PropTypes.number,
   label: PropTypes.string.isRequired,
