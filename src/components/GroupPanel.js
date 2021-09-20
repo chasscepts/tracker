@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from 'react-redux';
-import GroupStatus from './GroupLink';
+import GroupLink from './GroupLink';
 import LoadingPanel from './LoadingPanel';
 import { loadGroups, selectGroups, selectTasks } from '../reducers/tasksSlice';
 
@@ -41,7 +41,7 @@ export default function GroupPanel() {
   return (
     <div style={styles.container}>
       {filtered.map(
-        (g) => <GroupStatus key={g.title} id={g.id} label={g.title} duration={g.duration} />,
+        (g) => <GroupLink key={g.title} id={g.id} label={g.title} duration={g.duration} />,
       )}
     </div>
   );
