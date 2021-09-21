@@ -7,8 +7,8 @@ import btn from '../assets/css/button.module.css';
 import sphere from '../assets/images/sphere.png';
 import timer from '../utilities/timer';
 import {
-  commitNext, selectEntry, selectEntryPendingRequestCount, selectEntryUpdateError,
-  selectEntryUpdateSuccess, selectNextEntry, updateEntry,
+  commitNext, selectEntry, selectEntryPendingRequestCount,
+  selectNextEntry, updateEntry,
 } from '../reducers/timerSlice';
 import LdsRing from './LdsRing';
 import { dates } from '../utilities';
@@ -77,9 +77,7 @@ export default function Stopwatch() {
   const [elapsed, setElapsed] = useState(0);
   const [running, setRunning] = useState(timer.running());
   const { entry, title } = useSelector(selectEntry);
-  const { nextEntry } = useSelector(selectNextEntry);
-  const successMsg = useSelector(selectEntryUpdateSuccess);
-  const errorMsg = useSelector(selectEntryUpdateError);
+  const nextEntry = useSelector(selectNextEntry);
   const requestCount = useSelector(selectEntryPendingRequestCount);
   const dispatch = useDispatch();
 
@@ -87,20 +85,31 @@ export default function Stopwatch() {
     return <Redirect to="/" />;
   }
 
-  if (!running && nextEntry && nextEntry.id !== entry.id) {
-    dispatch(commitNext());
+  const timerId = timer.subscribe((seconds) => {
+    setElapsed(seconds);
+  });
+
+  const canCommit = !running
+    && nextEntry && nextEntry.entry && nextEntry.entry.id !== entry.id;
+
+  useEffect(() => {
+    if (canCommit) {
+      dispatch(commitNext());
+    }
+    return () => timer.unsubscribe(timerId);
+  });
+
+  if (canCommit) {
     return <></>;
   }
 
-  const hasNext = (running && nextEntry && entry.id !== nextEntry.id) || false;
+  const hasNext = (
+    running && nextEntry && nextEntry.entry && entry.id !== nextEntry.entry.id
+  ) || false;
 
   const btnClass = (color) => `${btn.btn} ${btn[color]} ${btn.round}`;
 
   const handClass = running ? `${css.hand} ${css.active}` : css.hand;
-
-  const timerId = timer.subscribe((seconds) => {
-    setElapsed(seconds);
-  });
 
   const startTimer = () => {
     timer.start();
@@ -122,8 +131,6 @@ export default function Stopwatch() {
     setElapsed(0);
   };
 
-  useEffect(() => () => timer.unsubscribe(timerId));
-
   return (
     <div className={css.container}>
       <div className={css.stopwatch}>
@@ -138,8 +145,6 @@ export default function Stopwatch() {
       <div className={css.entryWrap}>
         {`${title}: ${dates.timeString(entry.duration)} recorded`}
       </div>
-      <MessageBoard msg={successMsg} type="success" />
-      <MessageBoard msg={errorMsg} type="error" />
       <MessageBoard msg={hasNext && cocurrentMsg} type="error" />
       <div className={css.controls}>
         {running && (

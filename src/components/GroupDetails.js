@@ -7,7 +7,6 @@ import {
   loadGroupTasks,
   selectDetailsGroup,
   selectDetailsHasPendingError,
-  selectDetailsLoadError,
 } from '../reducers/detailsSlice';
 import LoadingPanel from './LoadingPanel';
 import { dates } from '../utilities';
@@ -170,7 +169,6 @@ export default function GroupDetails() {
   const params = useParams();
   const loading = useSelector(selectDetailsHasPendingError);
   const group = useSelector(selectDetailsGroup);
-  const errorMsg = useSelector(selectDetailsLoadError);
   const dispatch = useDispatch();
 
   const { id, title: pageTitle } = params;
@@ -194,8 +192,6 @@ export default function GroupDetails() {
 
   return (
     <div className={styles.container}>
-      {errorMsg
-      && <div>{errorMsg}</div>}
       <div>{components}</div>
     </div>
   );

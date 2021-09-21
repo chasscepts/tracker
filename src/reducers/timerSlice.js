@@ -1,6 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 import api from '../api';
-import { setTasksError } from './tasksSlice';
+import { addFeedback } from './feedbackSlice';
+import { updateTaskEntry } from './tasksSlice';
 
 /* eslint-disable no-param-reassign */
 const timerSlice = createSlice({
@@ -8,8 +9,6 @@ const timerSlice = createSlice({
   initialState: {
     entry: {},
     nextEntry: {},
-    updateError: null,
-    updateSuccess: null,
     pendingRequestCount: 0,
     hasPendingRequests: false,
   },
@@ -22,7 +21,7 @@ const timerSlice = createSlice({
       state.entry = payload;
     },
     setNextEntry: (state, { payload }) => {
-      if (!state.entry.id) {
+      if (!state.entry.entry) {
         state.entry = payload;
       } else {
         state.nextEntry = payload;
@@ -31,32 +30,23 @@ const timerSlice = createSlice({
     addEntryRequest: (state) => {
       state.pendingRequestCount += 1;
       state.hasPendingRequests = true;
-      state.updateError = null;
-      state.updateSuccess = null;
     },
-    updateStoreEntry: (state, { payload: { message, duration } }) => {
-      console.log({ message, duration });
-      state.updateSuccess = message;
-      state.entry.entry.duration += duration;
-      console.log(state.entry.entry.duration);
-      let temp = state.pendingRequestCount - 1;
-      if (temp <= 0) {
-        state.hasPendingRequests = false;
-        temp = 0;
+    removeEntryRequest: (state) => {
+      let temp = state.pendingRequestCount;
+      if (temp > 0) {
+        temp -= 1;
+        if (temp === 0) {
+          state.hasPendingRequests = false;
+        }
+        state.pendingRequestCount = temp;
       }
-      state.pendingRequestCount = temp;
     },
-    setEntryUpdateSuccess: (state, { payload }) => {
-      state.updateSuccess = payload;
-      let temp = state.pendingRequestCount - 1;
-      if (temp <= 0) {
-        state.hasPendingRequests = false;
-        temp = 0;
+    updateStoreEntry: (state, { payload }) => {
+      const { entry: { entry } } = state;
+      if (entry && entry.id === payload.id) {
+        entry.duration += payload.duration;
       }
-      state.pendingRequestCount = temp;
-    },
-    setEntryUpdateError: (state, { payload }) => {
-      state.updateError = payload;
+
       let temp = state.pendingRequestCount - 1;
       if (temp <= 0) {
         state.hasPendingRequests = false;
@@ -74,14 +64,11 @@ export const {
   setNextEntry,
   addEntryRequest,
   updateStoreEntry,
-  setEntryUpdateSuccess,
-  setEntryUpdateError,
+  removeEntryRequest,
 } = timerSlice.actions;
 
 export const selectEntry = (state) => state.timer.entry;
 export const selectNextEntry = (state) => state.timer.nextEntry;
-export const selectEntryUpdateError = (state) => state.timer.updateError;
-export const selectEntryUpdateSuccess = (state) => state.timer.updateSuccess;
 export const selectEntryHasPendingRequest = (state) => state.timer.hasPendingRequests;
 export const selectEntryPendingRequestCount = (state) => state.timer.pendingRequestCount;
 
@@ -91,7 +78,7 @@ export const updateEntry = (entry, duration, title) => (dispatch, getState) => {
   const { auth: { user } } = getState();
 
   if (!user) {
-    dispatch(setTasksError('You must be logged in to fetch tasks'));
+    dispatch(addFeedback({ message: 'You must be logged in to fetch groups', type: 'error' }));
     return;
   }
 
@@ -100,10 +87,14 @@ export const updateEntry = (entry, duration, title) => (dispatch, getState) => {
   api.updateEntry(user.token, entry, duration)
     .then(() => {
       const msg = `Update of Task Entry ${title} successful`;
-      dispatch(updateStoreEntry({ message: msg, duration }));
+      dispatch(updateStoreEntry({ duration, id: entry.id }));
+      dispatch(removeEntryRequest());
+      dispatch(updateTaskEntry({ entry, duration }));
+      dispatch(addFeedback({ type: 'success', message: msg }));
     })
     .catch(({ message }) => {
       const msg = `Update of Task Entry ${title} failed with message: ${message}`;
-      dispatch(setEntryUpdateError(msg));
+      dispatch(removeEntryRequest());
+      dispatch(addFeedback({ type: 'error', message: msg }));
     });
 };

@@ -3,9 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { COLORS } from '../utilities';
 import button from '../assets/css/button.module.css';
 import {
-  selectCreateTaskError,
   selectCreateTaskRequestCount,
-  setCreateTaskError,
   selectGroups,
   loadGroups,
   createTask,
@@ -90,7 +88,6 @@ const styles = {
 export default function NewTask() {
   const [groupId, setGroupId] = useState('');
   const [title, setTitle] = useState('');
-  const errorMsg = useSelector(selectCreateTaskError);
   const requestCount = useSelector(selectCreateTaskRequestCount);
   const groups = useSelector(selectGroups);
   const dispatch = useDispatch();
@@ -114,11 +111,15 @@ export default function NewTask() {
     }
   };
 
-  const clearError = () => dispatch(setCreateTaskError(null));
-
   const submitForm = () => {
     if (groupId && title) {
       dispatch(createTask(groupId, title));
+    }
+  };
+
+  const handleEnterKey = (evt) => {
+    if (evt.key === 'Enter') {
+      submitForm();
     }
   };
 
@@ -135,19 +136,12 @@ export default function NewTask() {
           <div style={styles.loadingMsg}>{loadingMessage}</div>
         </div>
         )}
-        {errorMsg
-        && (
-        <div style={styles.error}>
-          <button style={styles.errorBtn} type="button" onClick={clearError}>X</button>
-          <div>{errorMsg}</div>
-        </div>
-        )}
         <div style={styles.label}>Please Select Task Category</div>
         <select style={styles.input} name="id" value={groupId} onChange={handleChange}>
           {options.map((g) => <option key={g.title} value={g.id}>{g.title}</option>)}
         </select>
         <div style={styles.label}>Enter Title</div>
-        <input style={styles.input} name="title" value={title} onChange={handleChange} />
+        <input style={styles.input} name="title" value={title} onChange={handleChange} onKeyDown={handleEnterKey} />
         <div style={styles.controls}>
           <button
             className={`${button.btn} ${button.blue} ${button.round}`}

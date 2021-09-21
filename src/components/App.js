@@ -11,10 +11,12 @@ import BottomNavigation from '../containers/BottomNavigation';
 import NewTask from './NewTask';
 import EditTasks from './EditTasks';
 import Charts from './Charts';
+import Feedbacks from './Feedbacks';
 
 function App() {
   return (
     <div className={styles.container}>
+      <Feedbacks />
       <BrowserRouter>
         <AppHeader />
         <main className={styles.page}>

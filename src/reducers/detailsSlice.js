@@ -1,5 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import api from '../api';
+import { addFeedback } from './feedbackSlice';
 
 /* eslint-disable no-param-reassign */
 const detailsSlice = createSlice({
@@ -9,12 +10,19 @@ const detailsSlice = createSlice({
     hasPendingRequest: false,
     store: [],
     group: null,
-    loadError: null,
   },
   reducers: {
     addRequest: (state) => {
       state.requestCount += 1;
       state.hasPendingRequest = true;
+    },
+    removeRequest: (state) => {
+      let temp = state.requestCount - 1;
+      if (temp < 0) {
+        temp = 0;
+        state.hasPendingRequest = false;
+      }
+      state.requestCount = temp;
     },
     addGroup: (state, { payload }) => {
       state.group = payload;
@@ -35,28 +43,24 @@ const detailsSlice = createSlice({
       }
       state.requestCount = temp;
     },
-    setGroupLoadError: (state, { payload }) => {
-      state.loadError = payload;
-    },
   },
 });
 /* eslint-enable no-param-reassign */
 
 export const {
   addRequest,
+  removeRequest,
   addGroup,
   setGroup,
-  setGroupLoadError,
 } = detailsSlice.actions;
 
 export const selectDetailsHasPendingError = (state) => state.details.hasPendingRequest;
 export const selectDetailsGroup = (state) => state.details.group;
-export const selectDetailsLoadError = (state) => state.details.loadError;
 
 export const loadGroupTasks = (groupId, title) => (dispatch, getState) => {
   const { auth: { user }, details: { store } } = getState();
   if (!user) {
-    dispatch(setGroupLoadError('You must be logged in to fetch tasks'));
+    dispatch(addFeedback({ message: 'You must be logged in to fetch tasks', type: 'error' }));
     return;
   }
 
@@ -72,7 +76,10 @@ export const loadGroupTasks = (groupId, title) => (dispatch, getState) => {
     .then((group) => {
       dispatch(addGroup({ title, id: groupId, tasks: group }));
     })
-    .catch((err) => setGroupLoadError(err.message));
+    .catch(({ message }) => {
+      dispatch(removeRequest());
+      dispatch(addFeedback({ message, type: 'error' }));
+    });
 };
 
 export default detailsSlice.reducer;

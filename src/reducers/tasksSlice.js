@@ -1,6 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 import api from '../api';
 import { dates } from '../utilities';
+import { addFeedback } from './feedbackSlice';
 
 /* eslint-disable no-param-reassign */
 const tasksSlice = createSlice({
@@ -9,15 +10,11 @@ const tasksSlice = createSlice({
     date: dates.today(),
     groups: null,
     groupsLoading: false,
-    groupsError: null,
     tasksCache: {},
     tasks: [],
     tasksLoading: false,
-    tasksError: null,
     createRequestCount: 0,
-    createError: null,
     updateRequestCount: 0,
-    updateError: null,
   },
   reducers: {
     setDate: (state, { payload }) => {
@@ -26,25 +23,15 @@ const tasksSlice = createSlice({
     setGroups: (state, { payload }) => {
       state.groups = payload;
       state.groupsLoading = false;
-      if (payload) {
-        state.groupsError = null;
-      }
     },
     setGroupsLoading: (state, { payload }) => {
       state.groupsLoading = payload;
-    },
-    setGroupsError: (state, { payload }) => {
-      state.groupsError = payload;
-      state.groupsLoading = false;
     },
     setTasks: (state, { payload }) => {
       state.tasks = payload;
     },
     setTasksLoading: (state, { payload }) => {
       state.tasksLoading = payload;
-    },
-    setTasksError: (state, { payload }) => {
-      state.tasksError = payload;
     },
     updateTasksCache: (state, { payload: { date, tasks } }) => {
       state.tasksCache[date] = tasks;
@@ -58,14 +45,18 @@ const tasksSlice = createSlice({
         state.createRequestCount -= 1;
       }
     },
-    setCreateTaskError: (state, { payload }) => {
-      state.createError = payload;
+    removeCreateRequest: (state) => {
       if (state.createRequestCount > 0) {
         state.createRequestCount -= 1;
       }
     },
     addUpdateTaskRequest: (state) => {
       state.updateRequestCount += 1;
+    },
+    removeUpdateTaskRequest: (state) => {
+      if (state.updateRequestCount > 0) {
+        state.updateRequestCount -= 1;
+      }
     },
     updateLocalTask: (state, { payload: { id, title } }) => {
       const task = state.tasks.find((t) => t.id === id);
@@ -82,16 +73,16 @@ const tasksSlice = createSlice({
         state.updateRequestCount -= 1;
       }
     },
-    setUpdateTaskError: (state, { payload }) => {
-      state.updateError = payload;
-      if (state.updateRequestCount > 0) {
-        state.updateRequestCount -= 1;
-      }
-    },
     deleteLocalTask: (state, { payload }) => {
       state.tasks = state.tasks.filter((t) => t.id !== payload);
       if (state.updateRequestCount > 0) {
         state.updateRequestCount -= 1;
+      }
+    },
+    updateTaskEntry: (state, { payload: { entry, duration } }) => {
+      const task = state.tasks.find((t) => t.id === entry.task_id);
+      if (task) {
+        task.entries[0].duration += duration;
       }
     },
   },
@@ -102,18 +93,17 @@ export const {
   setDate,
   setGroups,
   setGroupsLoading,
-  setGroupsError,
   setTasks,
   setTasksLoading,
-  setTasksError,
   updateTasksCache,
   addTask,
   addCreateTaskRequest,
-  setCreateTaskError,
+  removeCreateRequest,
   updateLocalTask,
   addUpdateTaskRequest,
-  setUpdateTaskError,
+  removeUpdateTaskRequest,
   deleteLocalTask,
+  updateTaskEntry,
 } = tasksSlice.actions;
 
 export const selectDate = (state) => state.tasks.date;
@@ -122,15 +112,9 @@ export const selectGroups = (state) => state.tasks.groups;
 
 export const selectGroupsLoading = (state) => state.tasks.groupsLoading;
 
-export const selectGroupsError = (state) => state.tasks.groupsError;
-
 export const selectTasks = (state) => state.tasks.tasks;
 
-export const selectCreateTaskError = (state) => state.tasks.createError;
-
 export const selectCreateTaskRequestCount = (state) => state.tasks.createRequestCount;
-
-export const selectUpdateTaskError = (state) => state.tasks.updateError;
 
 export const selectUpdateTaskRequestCount = (state) => state.tasks.updateRequestCount;
 
@@ -141,7 +125,7 @@ export const loadGroups = () => (dispatch, getState) => {
   const { auth: { user } } = state;
 
   if (!user) {
-    dispatch(setGroupsError('You must be logged in to fetch groups'));
+    dispatch(addFeedback({ message: 'You must be logged in to fetch groups', type: 'error' }));
     return;
   }
 
@@ -151,7 +135,10 @@ export const loadGroups = () => (dispatch, getState) => {
     .then((groups) => {
       dispatch(setGroups(groups));
     })
-    .catch((err) => setGroupsError(err.message));
+    .catch(({ message }) => {
+      dispatch(setGroupsLoading(false));
+      dispatch(addFeedback({ message, type: 'error' }));
+    });
 };
 
 export const loadTasks = () => (dispatch, getState) => {
@@ -160,7 +147,7 @@ export const loadTasks = () => (dispatch, getState) => {
   const { auth: { user } } = state;
 
   if (!user) {
-    dispatch(setTasksError('You must be logged in to fetch tasks'));
+    dispatch(addFeedback({ message: 'You must be logged in to fetch tasks!', type: 'error' }));
     return;
   }
 
@@ -170,7 +157,7 @@ export const loadTasks = () => (dispatch, getState) => {
     .then((tasks) => {
       dispatch(setTasks(tasks));
     })
-    .catch((err) => dispatch(setTasksError(err.message)));
+    .catch(({ message }) => dispatch(addFeedback({ message, type: 'error' })));
 };
 
 export const createTask = (groupId, title) => (dispatch, getState) => {
@@ -178,7 +165,7 @@ export const createTask = (groupId, title) => (dispatch, getState) => {
   const { auth: { user } } = state;
 
   if (!user) {
-    dispatch(setCreateTaskError('You must be logged in to create tasks'));
+    dispatch(addFeedback({ message: 'You must be logged in to create tasks', type: 'error' }));
     return;
   }
 
@@ -187,8 +174,12 @@ export const createTask = (groupId, title) => (dispatch, getState) => {
   api.createTask(user.token, groupId, title)
     .then((task) => {
       dispatch(addTask(task));
+      dispatch(addFeedback({ message: `The task ${task.title} was successfully created.`, type: 'success' }));
     })
-    .catch((err) => dispatch(setCreateTaskError(err.message)));
+    .catch(({ message }) => {
+      dispatch(removeCreateRequest());
+      dispatch(addFeedback({ message, type: 'error' }));
+    });
 };
 
 export const updateTask = (id, title) => (dispatch, getState) => {
@@ -196,7 +187,7 @@ export const updateTask = (id, title) => (dispatch, getState) => {
   const { auth: { user } } = state;
 
   if (!user) {
-    dispatch(setUpdateTaskError('You must be logged in to update tasks'));
+    dispatch(addFeedback({ message: 'You must be logged in to update tasks', type: 'error' }));
     return;
   }
 
@@ -205,8 +196,12 @@ export const updateTask = (id, title) => (dispatch, getState) => {
   api.updateTask(user.token, id, title)
     .then(() => {
       dispatch(updateLocalTask({ id, title }));
+      dispatch(addFeedback({ message: `Task ${title} successfully updated.`, type: 'success' }));
     })
-    .catch((err) => dispatch(setUpdateTaskError(err.message)));
+    .catch(({ message }) => {
+      dispatch(removeUpdateTaskRequest());
+      dispatch(addFeedback({ message, type: 'error' }));
+    });
 };
 
 export const deleteTask = (id) => (dispatch, getState) => {
@@ -214,7 +209,7 @@ export const deleteTask = (id) => (dispatch, getState) => {
   const { auth: { user } } = state;
 
   if (!user) {
-    dispatch(setUpdateTaskError('You must be logged in to delete tasks'));
+    dispatch(addFeedback({ message: 'You must be logged in to update tasks', type: 'error' }));
     return;
   }
 
@@ -223,8 +218,12 @@ export const deleteTask = (id) => (dispatch, getState) => {
   api.deleteTask(user.token, id)
     .then(() => {
       dispatch(deleteLocalTask(id));
+      dispatch(addFeedback({ message: 'Task successfully deleted.', type: 'success' }));
     })
-    .catch((err) => dispatch(setUpdateTaskError(err.message)));
+    .catch(({ message }) => {
+      dispatch(removeUpdateTaskRequest());
+      dispatch(addFeedback({ message, type: 'error' }));
+    });
 };
 
 export default tasksSlice.reducer;

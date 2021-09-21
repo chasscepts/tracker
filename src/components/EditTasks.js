@@ -3,9 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { COLORS, dates } from '../utilities';
 import button from '../assets/css/button.module.css';
 import {
-  selectUpdateTaskError,
   selectUpdateTaskRequestCount,
-  setUpdateTaskError,
   updateTask,
   selectTasks,
   loadTasks,
@@ -132,7 +130,6 @@ const styles = {
 export default function EditTask() {
   const [title, setTitle] = useState('');
   const [selectedTask, selectTask] = useState(null);
-  const errorMsg = useSelector(selectUpdateTaskError);
   const requestCount = useSelector(selectUpdateTaskRequestCount);
   const tasks = useSelector(selectTasks);
   const dispatch = useDispatch();
@@ -147,8 +144,6 @@ export default function EditTask() {
       setTitle(value);
     }
   };
-
-  const clearError = () => dispatch(setUpdateTaskError(null));
 
   const submitForm = () => {
     if (title && selectedTask) {
@@ -197,13 +192,6 @@ export default function EditTask() {
         <div style={styles.loadingWrap}>
           <LdsRing width={20} color={COLORS.primary} />
           <div style={styles.loadingMsg}>{loadingMessage}</div>
-        </div>
-        )}
-        {errorMsg
-        && (
-        <div style={styles.error}>
-          <button style={styles.errorBtn} type="button" onClick={clearError}>X</button>
-          <div>{errorMsg}</div>
         </div>
         )}
         {selectedTask && (
