@@ -19,7 +19,7 @@ const styles = {
   },
   innerWrap: {
     position: 'relative',
-    padding: '15px',
+    padding: '30px',
     border: '1px solid #ddd',
     borderRadius: '8px',
   },

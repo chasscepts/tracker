@@ -15,7 +15,7 @@ export default function Task({ task, index, onClick }) {
           <img src={icons(task.title)} className={styles.icon} alt={task.title} />
           <div className={styles.titleWrap}>
             <div className={styles.title}>{task.title}</div>
-            <div className={styles.duration}>{dates.timeString(task.entry.duration)}</div>
+            <div className={styles.duration}>{dates.timeString(task.entries[0].duration)}</div>
           </div>
         </div>
       </button>
@@ -27,11 +27,13 @@ Task.propTypes = {
   task: PropTypes.shape({
     id: PropTypes.number.isRequired,
     title: PropTypes.string.isRequired,
-    entry: PropTypes.shape({
-      id: PropTypes.number.isRequired,
-      entry_date: PropTypes.string.isRequired,
-      duration: PropTypes.number.isRequired,
-    }).isRequired,
+    entries: PropTypes.arrayOf(
+      PropTypes.shape({
+        id: PropTypes.number.isRequired,
+        entry_date: PropTypes.string.isRequired,
+        duration: PropTypes.number.isRequired,
+      }),
+    ).isRequired,
   }).isRequired,
   onClick: PropTypes.func.isRequired,
   index: PropTypes.number.isRequired,

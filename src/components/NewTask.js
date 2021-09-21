@@ -45,6 +45,7 @@ const styles = {
     padding: '7px',
     border: '1px solid #ddd',
     marginBottom: '15px',
+    color: 'inherit',
   },
   controls: {
     display: 'flex',

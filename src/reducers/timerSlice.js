@@ -34,6 +34,18 @@ const timerSlice = createSlice({
       state.updateError = null;
       state.updateSuccess = null;
     },
+    updateStoreEntry: (state, { payload: { message, duration } }) => {
+      console.log({ message, duration });
+      state.updateSuccess = message;
+      state.entry.entry.duration += duration;
+      console.log(state.entry.entry.duration);
+      let temp = state.pendingRequestCount - 1;
+      if (temp <= 0) {
+        state.hasPendingRequests = false;
+        temp = 0;
+      }
+      state.pendingRequestCount = temp;
+    },
     setEntryUpdateSuccess: (state, { payload }) => {
       state.updateSuccess = payload;
       let temp = state.pendingRequestCount - 1;
@@ -61,6 +73,7 @@ export const {
   setEntry,
   setNextEntry,
   addEntryRequest,
+  updateStoreEntry,
   setEntryUpdateSuccess,
   setEntryUpdateError,
 } = timerSlice.actions;
@@ -87,7 +100,7 @@ export const updateEntry = (entry, duration, title) => (dispatch, getState) => {
   api.updateEntry(user.token, entry, duration)
     .then(() => {
       const msg = `Update of Task Entry ${title} successful`;
-      dispatch(setEntryUpdateSuccess(msg));
+      dispatch(updateStoreEntry({ message: msg, duration }));
     })
     .catch(({ message }) => {
       const msg = `Update of Task Entry ${title} failed with message: ${message}`;

@@ -18,25 +18,19 @@ export default function GroupPanel() {
 
   dispatch(loadGroups());
 
-  if (!groups) {
+  if (!(groups && tasks)) {
     return <LoadingPanel text="Loading groups ..." />;
   }
 
   const filtered = [];
 
-  if (tasks) {
-    groups.forEach((g) => {
-      const duration = tasks.reduce((accm, current) => {
-        if (current.group_id === g.id) return accm + current.entry.duration;
-        return accm;
-      }, 0);
-      filtered.push({ ...g, duration });
-    });
-  } else {
-    groups.forEach((group) => {
-      filtered.push({ ...group, duration: 0 });
-    });
-  }
+  groups.forEach((g) => {
+    const duration = tasks.reduce((accm, current) => {
+      if (current.group_id === g.id) return accm + current.entries[0].duration;
+      return accm;
+    }, 0);
+    filtered.push({ ...g, duration });
+  });
 
   return (
     <div style={styles.container}>

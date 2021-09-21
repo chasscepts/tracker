@@ -44,6 +44,15 @@ export const dates = {
     const parts = str.split('-');
     return new Date(parts[0], parts[1] - 1, parts[2]);
   },
+  /**
+   * Gets the date of {@num} number of days ago
+   * @param {*} num number of days in the past
+   * @returns string resentation of day that conforms to API format
+   */
+  daysAgo: (num) => {
+    const date = new Date();
+    return formatDate(new Date(date.getFullYear(), date.getMonth(), date.getDate() - num));
+  },
 };
 
 export const taskDuration = (task, date) => {

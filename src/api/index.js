@@ -67,6 +67,18 @@ const put = (instance, path, data) => new Promise((resolve, reject) => {
     .catch((err) => reject(normalizeError(err)));
 });
 
+/**
+ * @param {axios} instance An instance of axios to use for this request
+ * @param {string} path relative url
+ * @returns Promise that resolves if resource is successfully deleted
+ * and rejects with error when request fails
+ */
+const destroy = (instance, path) => new Promise((resolve, reject) => {
+  instance.delete(path)
+    .then((res) => resolve(res.data))
+    .catch((err) => reject(normalizeError(err)));
+});
+
 const api = {
   getGroups: (token) => get(instantiate(token), '/groups'),
   getTasks: (token, { date, start, end }) => {
@@ -84,10 +96,11 @@ const api = {
 
     return get(instantiate(token), path);
   },
-  updateTask: (token, title) => post(instantiate(token), '/tasks', { title }),
   updateEntry: (token, entry, duration) => put(instantiate(token), `/entries/${entry.id}`, { duration: entry.duration + duration }),
   getGroupTasks: (token, id) => get(instantiate(token), `/groups/${id}/tasks?limit=10`),
   createTask: (token, groupId, title) => post(instantiate(token), `/groups/${groupId}/tasks/`, { title }),
+  updateTask: (token, id, title) => put(instantiate(token), `/tasks/${id}`, { title }),
+  deleteTask: (token, id) => destroy(instantiate(token), `/tasks/${id}`),
 };
 
 export default api;

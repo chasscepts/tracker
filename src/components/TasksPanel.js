@@ -22,7 +22,7 @@ export default function TaskPanel() {
   const handleClick = (idx) => {
     const task = tasks[idx];
     if (!task) return;
-    dispatch(setNextEntry({ entry: task.entry, title: task.title }));
+    dispatch(setNextEntry({ entry: task.entries[0], title: task.title }));
     setRedirect(true);
   };
 
