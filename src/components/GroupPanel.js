@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import GroupLink from './GroupLink';
 import LoadingPanel from './LoadingPanel';
@@ -16,21 +17,27 @@ export default function GroupPanel() {
   const tasks = useSelector(selectTasks);
   const dispatch = useDispatch();
 
-  dispatch(loadGroups());
+  useEffect(() => dispatch(loadGroups()), []);
 
-  if (!(groups && tasks)) {
+  if (!(groups)) {
     return <LoadingPanel text="Loading groups ..." />;
   }
 
   const filtered = [];
 
-  groups.forEach((g) => {
-    const duration = tasks.reduce((accm, current) => {
-      if (current.group_id === g.id) return accm + current.entries[0].duration;
-      return accm;
-    }, 0);
-    filtered.push({ ...g, duration });
-  });
+  if (tasks) {
+    groups.forEach((g) => {
+      const duration = tasks.reduce((accm, current) => {
+        if (current.group_id === g.id) return accm + current.entries[0].duration;
+        return accm;
+      }, 0);
+      filtered.push({ ...g, duration });
+    });
+  } else {
+    groups.forEach((g) => {
+      filtered.push({ ...g, duration: 0 });
+    });
+  }
 
   return (
     <div style={styles.container}>

@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { today } from '../utilities/dates';
 
 const normalizeError = (err) => {
   if (!err) {
@@ -21,7 +22,7 @@ const normalizeError = (err) => {
 
 const instantiate = (token) => {
   const instance = axios.create({
-    baseURL: 'http://localhost:3000/',
+    baseURL: 'https://time-max.herokuapp.com/',
     responseType: 'json',
   });
   instance.defaults.headers.common.Authorization = `Bearer ${token}`;
@@ -79,28 +80,52 @@ const destroy = (instance, path) => new Promise((resolve, reject) => {
     .catch((err) => reject(normalizeError(err)));
 });
 
-const api = {
-  getGroups: (token) => get(instantiate(token), '/groups'),
-  getTasks: (token, { date, start, end }) => {
-    let path = '/tasks';
-    if (date) {
-      path = `${path}?date=${date}`;
-    } else if (start) {
-      path = `${path}?start=${start}`;
-      if (end) {
-        path = `${path}&end=${end}`;
-      }
-    } else if (end) {
-      path = `${path}?end=${end}`;
-    }
-
-    return get(instantiate(token), path);
-  },
-  updateEntry: (token, entry, duration) => put(instantiate(token), `/entries/${entry.id}`, { duration: entry.duration + duration }),
-  getGroupTasks: (token, id) => get(instantiate(token), `/groups/${id}/tasks?limit=10`),
-  createTask: (token, groupId, title) => post(instantiate(token), `/groups/${groupId}/tasks/`, { title }),
-  updateTask: (token, id, title) => put(instantiate(token), `/tasks/${id}`, { title }),
-  deleteTask: (token, id) => destroy(instantiate(token), `/tasks/${id}`),
+export const fetchUser = (email, password) => {
+  const instance = axios.create({
+    baseURL: 'http://localhost:3000/',
+    responseType: 'json',
+  });
+  return post(instance, '/auth', { email, password });
 };
 
-export default api;
+export const registerUser = (email, password) => {
+  const instance = axios.create({
+    baseURL: 'http://localhost:3000/',
+    responseType: 'json',
+  });
+  return post(instance, '/auth/register', { email, password });
+};
+
+export const fetchGroups = (token) => get(instantiate(token), '/groups');
+
+export const fetchTasks = (token, { date, start, end }) => {
+  let path = '/tasks';
+  if (date) {
+    path = `${path}?date=${date}`;
+  } else if (start) {
+    path = `${path}?start=${start}`;
+    if (end) {
+      path = `${path}&end=${end}`;
+    }
+  } else if (end) {
+    path = `${path}?end=${end}`;
+  }
+
+  return get(instantiate(token), path);
+};
+
+export const updateEntry = (token, entry, duration) => (
+  put(instantiate(token), `/entries/${entry.id}`, { duration: entry.duration + duration })
+);
+
+export const fetchGroupTasks = (token, id) => (
+  get(instantiate(token), `/groups/${id}/tasks?end=${today()}`)
+);
+
+export const createTask = (token, groupId, title) => (
+  post(instantiate(token), `/groups/${groupId}/tasks/`, { title })
+);
+
+export const updateTask = (token, id, title) => put(instantiate(token), `/tasks/${id}`, { title });
+
+export const deleteTask = (token, id) => destroy(instantiate(token), `/tasks/${id}`);

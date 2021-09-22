@@ -3,7 +3,7 @@ import DatePanel from './DatePanel';
 import GroupPanel from './GroupPanel';
 import TaskPanel from './TasksPanel';
 import { setDate } from '../reducers/tasksSlice';
-import { dates } from '../utilities';
+import { today } from '../utilities/dates';
 
 const styles = {
   container: {
@@ -21,7 +21,7 @@ const styles = {
 export default function Home() {
   const dispatch = useDispatch();
 
-  dispatch(setDate(dates.today()));
+  dispatch(setDate(today()));
 
   return (
     <div style={styles.container}>

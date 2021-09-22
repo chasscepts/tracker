@@ -6,7 +6,7 @@ import {
   selectCreateTaskRequestCount,
   selectGroups,
   loadGroups,
-  createTask,
+  createTaskAsync,
 } from '../reducers/tasksSlice';
 import LdsRing from './LdsRing';
 
@@ -113,7 +113,7 @@ export default function NewTask() {
 
   const submitForm = () => {
     if (groupId && title) {
-      dispatch(createTask(groupId, title));
+      dispatch(createTaskAsync(groupId, title));
     }
   };
 

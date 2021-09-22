@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import api from '../api';
+import { updateEntry } from '../api';
 import { addFeedback } from './feedbackSlice';
 import { updateTaskEntry } from './tasksSlice';
 
@@ -74,7 +74,7 @@ export const selectEntryPendingRequestCount = (state) => state.timer.pendingRequ
 
 export default timerSlice.reducer;
 
-export const updateEntry = (entry, duration, title) => (dispatch, getState) => {
+export const updateEntryAsync = (entry, duration, title) => (dispatch, getState) => {
   const { auth: { user } } = getState();
 
   if (!user) {
@@ -84,7 +84,7 @@ export const updateEntry = (entry, duration, title) => (dispatch, getState) => {
 
   dispatch(addEntryRequest());
 
-  api.updateEntry(user.token, entry, duration)
+  updateEntry(user.token, entry, duration)
     .then(() => {
       const msg = `Update of Task Entry ${title} successful`;
       dispatch(updateStoreEntry({ duration, id: entry.id }));

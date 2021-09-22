@@ -9,7 +9,7 @@ import {
   selectDetailsHasPendingError,
 } from '../reducers/detailsSlice';
 import LoadingPanel from './LoadingPanel';
-import { dates } from '../utilities';
+import { today, format } from '../utilities/dates';
 import Status from './Status';
 
 const weekDays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
@@ -103,7 +103,7 @@ function getComponents(title, durations) {
   let date = keys[pointer];
   components.push(<Label label="Today" />);
 
-  if (date === dates.today()) {
+  if (date === today()) {
     pointer += 1;
     components.push(getRow(title, date, durations, keys, pointer));
     date = keys[pointer];
@@ -115,7 +115,7 @@ function getComponents(title, durations) {
   currentDate = previousDay(currentDate);
   weekDay -= 1;
 
-  if (weekDay >= 0 && date === dates.format(yesterday)) {
+  if (weekDay >= 0 && date === format(yesterday)) {
     pointer += 1;
     components.push(getRow(title, date, durations, keys, pointer));
     date = keys[pointer];
@@ -127,7 +127,7 @@ function getComponents(title, durations) {
   while (weekDay >= 0) {
     if (pointer >= length) return components;
     components.push(<Label label={weekDays[weekDay]} />);
-    if (date === dates.format(currentDate)) {
+    if (date === format(currentDate)) {
       pointer += 1;
       components.push(getRow(title, date, durations, keys, pointer));
       date = keys[pointer];
@@ -140,7 +140,7 @@ function getComponents(title, durations) {
   weekDay = 6;
   while (weekDay >= 0) {
     if (pointer >= length) return components;
-    if (date === dates.format(currentDate)) {
+    if (date === format(currentDate)) {
       pointer += 1;
       components.push(getRow(title, date, durations, keys, pointer));
       date = keys[pointer];

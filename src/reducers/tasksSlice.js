@@ -1,13 +1,15 @@
 import { createSlice } from '@reduxjs/toolkit';
-import api from '../api';
-import { dates } from '../utilities';
+import {
+  fetchGroups, fetchTasks, createTask, updateTask, deleteTask,
+} from '../api';
+import { today, daysAgo } from '../utilities/dates';
 import { addFeedback } from './feedbackSlice';
 
 /* eslint-disable no-param-reassign */
 const tasksSlice = createSlice({
   name: 'tasks',
   initialState: {
-    date: dates.today(),
+    date: today(),
     groups: null,
     groupsLoading: false,
     tasksCache: {},
@@ -131,7 +133,7 @@ export const loadGroups = () => (dispatch, getState) => {
 
   dispatch(setGroupsLoading(true));
 
-  api.getGroups(user.token)
+  fetchGroups(user.token)
     .then((groups) => {
       dispatch(setGroups(groups));
     })
@@ -153,14 +155,14 @@ export const loadTasks = () => (dispatch, getState) => {
 
   dispatch(setTasksLoading());
 
-  api.getTasks(user.token, { start: dates.daysAgo(14) })
+  fetchTasks(user.token, { start: daysAgo(14) })
     .then((tasks) => {
       dispatch(setTasks(tasks));
     })
     .catch(({ message }) => dispatch(addFeedback({ message, type: 'error' })));
 };
 
-export const createTask = (groupId, title) => (dispatch, getState) => {
+export const createTaskAsync = (groupId, title) => (dispatch, getState) => {
   const state = getState();
   const { auth: { user } } = state;
 
@@ -171,7 +173,7 @@ export const createTask = (groupId, title) => (dispatch, getState) => {
 
   dispatch(addCreateTaskRequest());
 
-  api.createTask(user.token, groupId, title)
+  createTask(user.token, groupId, title)
     .then((task) => {
       dispatch(addTask(task));
       dispatch(addFeedback({ message: `The task ${task.title} was successfully created.`, type: 'success' }));
@@ -182,7 +184,7 @@ export const createTask = (groupId, title) => (dispatch, getState) => {
     });
 };
 
-export const updateTask = (id, title) => (dispatch, getState) => {
+export const updateTaskAsync = (id, title) => (dispatch, getState) => {
   const state = getState();
   const { auth: { user } } = state;
 
@@ -193,7 +195,7 @@ export const updateTask = (id, title) => (dispatch, getState) => {
 
   dispatch(addUpdateTaskRequest());
 
-  api.updateTask(user.token, id, title)
+  updateTask(user.token, id, title)
     .then(() => {
       dispatch(updateLocalTask({ id, title }));
       dispatch(addFeedback({ message: `Task ${title} successfully updated.`, type: 'success' }));
@@ -204,7 +206,7 @@ export const updateTask = (id, title) => (dispatch, getState) => {
     });
 };
 
-export const deleteTask = (id) => (dispatch, getState) => {
+export const deleteTaskAsync = (id) => (dispatch, getState) => {
   const state = getState();
   const { auth: { user } } = state;
 
@@ -215,7 +217,7 @@ export const deleteTask = (id) => (dispatch, getState) => {
 
   dispatch(addUpdateTaskRequest());
 
-  api.deleteTask(user.token, id)
+  deleteTask(user.token, id)
     .then(() => {
       dispatch(deleteLocalTask(id));
       dispatch(addFeedback({ message: 'Task successfully deleted.', type: 'success' }));
