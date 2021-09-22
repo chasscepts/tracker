@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import styles from '../assets/css/Task.module.css';
-import { dates } from '../utilities';
+import { timeString } from '../utilities/dates';
 import icons from '../utilities/icons';
 
 export default function Task({ task, index, onClick }) {
@@ -15,7 +15,7 @@ export default function Task({ task, index, onClick }) {
           <img src={icons(task.title)} className={styles.icon} alt={task.title} />
           <div className={styles.titleWrap}>
             <div className={styles.title}>{task.title}</div>
-            <div className={styles.duration}>{dates.timeString(task.entries[0].duration)}</div>
+            <div className={styles.duration}>{timeString(task.entries[0].duration)}</div>
           </div>
         </div>
       </button>

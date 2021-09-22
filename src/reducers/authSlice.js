@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import axios from 'axios';
+import { fetchUser, registerUser } from '../api';
 
 /* eslint-disable no-param-reassign */
 const authSlice = createSlice({
@@ -64,77 +64,19 @@ export const {
   logout,
 } = authSlice.actions;
 
-export const login = (email, password) => (dispatch) => {
-  const url = 'http://localhost:3000/auth';
-  axios({
-    url,
-    method: 'post',
-    responseType: 'json',
-    data: { email, password },
-  })
-    .then((res) => {
-      dispatch(setUser(res.data.user));
-    })
-    .catch((err) => {
-      if (!err) {
-        dispatch(setLoginError('Unknown error encountered. Please try again.'));
-        return;
-      }
-      if (err.response) {
-        const msg = err.response.data.message || err.response.data;
-        dispatch(setLoginError(msg));
-        return;
-      }
-      if (err.request) {
-        dispatch(setLoginError('Server is not responding.'));
-        return;
-      }
-      if (err.message) {
-        dispatch(setLoginError(err.message));
-        return;
-      }
-      if (typeof err === 'string') {
-        dispatch(setLoginError(err));
-        return;
-      }
-      dispatch(setLoginError('Unknown error encountered. Please try again.'));
-    });
+export const login = (email, password) => (dispatch, getState) => {
+  const { auth: { user } } = getState();
+  if (user) return;
+
+  fetchUser(email, password)
+    .then((data) => dispatch(setUser(data.user)))
+    .catch(({ message }) => dispatch(setLoginError(message)));
 };
 
 export const register = (email, password) => (dispatch) => {
-  const url = 'http://localhost:3000/auth/register';
-  axios({
-    url,
-    method: 'post',
-    responseType: 'json',
-    data: { email, password },
-  })
-    .then(() => {
-      dispatch(setRegistrationSuccess(true));
-    })
-    .catch((err) => {
-      if (!err) {
-        dispatch(setRegistrationError('An unknown error encountered. Please try again.'));
-        return;
-      }
-      if (err.response) {
-        dispatch(setRegistrationError(err.response.data.message || err.response.data));
-        return;
-      }
-      if (err.request) {
-        dispatch(setRegistrationError('Server is not responding.'));
-        return;
-      }
-      if (err.message) {
-        dispatch(setRegistrationError(err.message));
-        return;
-      }
-      if (typeof err === 'string') {
-        dispatch(setRegistrationError(err));
-        return;
-      }
-      dispatch(setRegistrationError('An unknown error encountered. Please try again.'));
-    });
+  registerUser(email, password)
+    .then(() => dispatch(setRegistrationSuccess(true)))
+    .catch(({ message }) => dispatch(setRegistrationError(message)));
 };
 
 export const selectUser = (state) => state.auth.user;

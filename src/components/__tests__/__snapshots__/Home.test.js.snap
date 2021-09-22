@@ -1,0 +1,111 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Home matches snapshot 1`] = `
+<div
+  style={
+    Object {
+      "display": "flex",
+      "flexDirection": "column",
+      "height": "100%",
+      "overflow": "hidden",
+    }
+  }
+>
+  <div
+    style={
+      Object {
+        "padding": "15px",
+        "textAlign": "center",
+        "width": "100%",
+      }
+    }
+  >
+    September 21, 2021
+  </div>
+  <div
+    style={
+      Object {
+        "alignItems": "center",
+        "display": "flex",
+        "flexDirection": "column",
+        "justifyContent": "center",
+        "minHeight": "180px",
+        "width": "100%",
+      }
+    }
+  >
+    <div
+      className="ldsRing"
+      style={
+        Object {
+          "height": "40px",
+          "width": "40px",
+        }
+      }
+    >
+      <div
+        style={
+          Object {
+            "borderColor": "#62b5e5 transparent transparent transparent",
+            "borderWidth": "4px",
+            "height": "40px",
+            "width": "40px",
+          }
+        }
+      />
+      <div
+        style={
+          Object {
+            "borderColor": "#62b5e5 transparent transparent transparent",
+            "borderWidth": "4px",
+            "height": "40px",
+            "width": "40px",
+          }
+        }
+      />
+      <div
+        style={
+          Object {
+            "borderColor": "#62b5e5 transparent transparent transparent",
+            "borderWidth": "4px",
+            "height": "40px",
+            "width": "40px",
+          }
+        }
+      />
+      <div
+        style={
+          Object {
+            "borderColor": "#62b5e5 transparent transparent transparent",
+            "borderWidth": "4px",
+            "height": "40px",
+            "width": "40px",
+          }
+        }
+      />
+    </div>
+    <div
+      style={
+        Object {
+          "marginTop": "30px",
+          "textAlign": "center",
+        }
+      }
+    >
+      Loading groups ...
+    </div>
+  </div>
+  <div
+    style={
+      Object {
+        "flex": 1,
+        "overflow": "auto",
+      }
+    }
+  >
+    <div
+      className="container"
+    />
+  </div>
+</div>
+`;

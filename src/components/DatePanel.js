@@ -1,3 +1,5 @@
+import { formattedDate } from '../utilities/dates';
+
 const styles = {
   container: {
     width: '100%',
@@ -6,18 +8,12 @@ const styles = {
   },
 };
 
-const formattedDate = (() => {
-  const today = new Date();
-  return today.toLocaleDateString(
-    'en-US',
-    { year: 'numeric', month: 'long', day: 'numeric' },
-  );
-})();
-
 export default function DatePanel() {
+  const date = formattedDate();
+
   return (
     <div style={styles.container}>
-      {formattedDate}
+      {date}
     </div>
   );
 }

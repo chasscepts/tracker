@@ -8,10 +8,10 @@ import sphere from '../assets/images/sphere.png';
 import timer from '../utilities/timer';
 import {
   commitNext, selectEntry, selectEntryPendingRequestCount,
-  selectNextEntry, updateEntry,
+  selectNextEntry, updateEntryAsync,
 } from '../reducers/timerSlice';
 import LdsRing from './LdsRing';
-import { dates } from '../utilities';
+import { timeStringClock, timeString } from '../utilities/dates';
 
 const styles = {
   ml20: {
@@ -20,7 +20,7 @@ const styles = {
 };
 
 function Display({ time }) {
-  return <div className={css.time}>{dates.timeStringClock(time)}</div>;
+  return <div className={css.time}>{timeStringClock(time)}</div>;
 }
 
 Display.propTypes = {
@@ -119,7 +119,7 @@ export default function Stopwatch() {
   const commit = () => {
     timer.stop();
     setRunning(false);
-    dispatch(updateEntry(entry, timer.elapsedTime(), title));
+    dispatch(updateEntryAsync(entry, timer.elapsedTime(), title));
     if (hasNext) {
       dispatch(commitNext());
     }
@@ -143,7 +143,7 @@ export default function Stopwatch() {
       </div>
       <UpdatingIndicator count={requestCount} />
       <div className={css.entryWrap}>
-        {`${title}: ${dates.timeString(entry.duration)} recorded`}
+        {`${title}: ${timeString(entry.duration)} recorded`}
       </div>
       <MessageBoard msg={hasNext && cocurrentMsg} type="error" />
       <div className={css.controls}>

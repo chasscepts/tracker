@@ -1,0 +1,99 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Login matches snapshot 1`] = `
+<div
+  style={
+    Object {
+      "display": "flex",
+      "flexDirection": "column",
+      "height": "100%",
+      "justifyContent": "center",
+      "padding": "30px",
+    }
+  }
+>
+  <div
+    style={
+      Object {
+        "border": "1px solid #ddd",
+        "borderRadius": "8px",
+        "padding": "30px",
+        "position": "relative",
+      }
+    }
+  >
+    <h2
+      style={
+        Object {
+          "color": "#62b5e5",
+        }
+      }
+    >
+      Sign In
+    </h2>
+    <input
+      className="text"
+      name="email"
+      onChange={[Function]}
+      placeholder="Enter Email"
+      type="text"
+      value=""
+    />
+    <input
+      className="text"
+      name="password"
+      onChange={[Function]}
+      placeholder="Enter Password"
+      type="password"
+      value=""
+    />
+    <button
+      onClick={[Function]}
+      style={
+        Object {
+          "backgroundColor": "#62b5e5",
+          "borderRadius": "4px",
+          "borderWidth": 0,
+          "boxShadow": "0 3px 9px rgb(0 0 0 / 5%)",
+          "color": "#fff",
+          "cursor": "pointer",
+          "display": "block",
+          "fontSize": "1.4rem",
+          "fontWeight": "bold,",
+          "lineHeight": 1,
+          "marginTop": "30px",
+          "padding": "15px",
+          "textAlign": "center",
+          "transition": "all 180ms",
+          "width": "100%",
+        }
+      }
+      type="button"
+    >
+      Log In
+    </button>
+    <div
+      style={
+        Object {
+          "display": "flex",
+          "justifyContent": "flex-end",
+          "marginTop": "30px",
+        }
+      }
+    >
+      <a
+        href="/register"
+        onClick={[Function]}
+        style={
+          Object {
+            "color": "#9e0606",
+            "textDecoration": "underline",
+          }
+        }
+      >
+        Register
+      </a>
+    </div>
+  </div>
+</div>
+`;

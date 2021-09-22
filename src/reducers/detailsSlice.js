@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import api from '../api';
+import { fetchGroupTasks } from '../api';
 import { addFeedback } from './feedbackSlice';
 
 /* eslint-disable no-param-reassign */
@@ -72,7 +72,7 @@ export const loadGroupTasks = (groupId, title) => (dispatch, getState) => {
 
   dispatch(addRequest());
 
-  api.getGroupTasks(user.token, groupId)
+  fetchGroupTasks(user.token, groupId)
     .then((group) => {
       dispatch(addGroup({ title, id: groupId, tasks: group }));
     })

@@ -1,13 +1,14 @@
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { COLORS, dates } from '../utilities';
+import { COLORS } from '../utilities';
+import { today } from '../utilities/dates';
 import button from '../assets/css/button.module.css';
 import {
   selectUpdateTaskRequestCount,
-  updateTask,
   selectTasks,
   loadTasks,
-  deleteTask,
+  deleteTaskAsync,
+  updateTaskAsync,
 } from '../reducers/tasksSlice';
 import LdsRing from './LdsRing';
 import LoadingPanel from './LoadingPanel';
@@ -135,7 +136,7 @@ export default function EditTask() {
   const dispatch = useDispatch();
 
   if (!tasks) {
-    dispatch(loadTasks(dates.today()));
+    dispatch(loadTasks(today()));
   }
 
   const handleChange = (evt) => {
@@ -147,7 +148,7 @@ export default function EditTask() {
 
   const submitForm = () => {
     if (title && selectedTask) {
-      dispatch(updateTask(selectedTask.id, title));
+      dispatch(updateTaskAsync(selectedTask.id, title));
     }
   };
 
@@ -159,7 +160,7 @@ export default function EditTask() {
 
   const removeTask = () => {
     if (selectedTask) {
-      dispatch(deleteTask(selectedTask.id));
+      dispatch(deleteTaskAsync(selectedTask.id));
       selectTask(null);
     }
   };

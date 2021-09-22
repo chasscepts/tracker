@@ -57,6 +57,7 @@ export default function LoginPage() {
   if (user) {
     return <Redirect to={state?.from || '/'} />;
   }
+
   if (error) {
     if (busy) {
       setBusy(false);
