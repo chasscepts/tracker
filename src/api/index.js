@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { today } from '../utilities/dates';
 
-const baseURL = 'http://localhost:3000/';
+const baseURL = 'https://time-max.herokuapp.com/';
 
 const normalizeError = (err) => {
   if (!err) {
