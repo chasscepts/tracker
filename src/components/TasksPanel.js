@@ -1,14 +1,44 @@
-import { useEffect, useState } from 'react';
-import { Redirect } from 'react-router';
+import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
+import PropTypes from 'prop-types';
 import styles from '../assets/css/TaskPanel.module.css';
-import Task from './Task';
 import LoadingPanel from './LoadingPanel';
 import { loadTasks, selectDate, selectTasks } from '../reducers/tasksSlice';
-import { setNextEntry } from '../reducers/timerSlice';
+import { timeString } from '../utilities/dates';
+import icons from '../utilities/icons';
+
+function Task({ task }) {
+  return (
+    <div className={styles.taskContainer}>
+      <Link className={styles.btn} to={`/tasks/${task.id}/entries/${task.entries[0].id}`}>
+        <div className={styles.wrap}>
+          <img src={icons(task.title)} className={styles.icon} alt={task.title} />
+          <div className={styles.titleWrap}>
+            <div className={styles.title}>{task.title}</div>
+            <div className={styles.duration}>{timeString(task.entries[0].duration)}</div>
+          </div>
+        </div>
+      </Link>
+    </div>
+  );
+}
+
+Task.propTypes = {
+  task: PropTypes.shape({
+    id: PropTypes.number.isRequired,
+    title: PropTypes.string.isRequired,
+    entries: PropTypes.arrayOf(
+      PropTypes.shape({
+        id: PropTypes.number.isRequired,
+        entry_date: PropTypes.string.isRequired,
+        duration: PropTypes.number.isRequired,
+      }),
+    ).isRequired,
+  }).isRequired,
+};
 
 export default function TaskPanel() {
-  const [redirect, setRedirect] = useState(false);
   const date = useSelector(selectDate);
   const tasks = useSelector(selectTasks);
   const dispatch = useDispatch();
@@ -19,22 +49,9 @@ export default function TaskPanel() {
     return <LoadingPanel text="Loading tasks ..." />;
   }
 
-  const handleClick = (idx) => {
-    const task = tasks[idx];
-    if (!task) return;
-    dispatch(setNextEntry({ entry: task.entries[0], title: task.title }));
-    setRedirect(true);
-  };
-
-  if (redirect) {
-    return <Redirect to="/timer" />;
-  }
-
   return (
     <div className={styles.container}>
-      {tasks.map(
-        (t, idx) => <Task index={idx} task={t} key={t.title} onClick={handleClick} />,
-      )}
+      {tasks.map((t) => <Task task={t} key={t.title} />)}
     </div>
   );
 }

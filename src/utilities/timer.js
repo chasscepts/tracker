@@ -2,6 +2,7 @@ let elapsed = 0;
 let seconds = 0;
 let stopped = true;
 let prevStamp;
+let client;
 
 let id = 0;
 
@@ -41,9 +42,11 @@ const loop = (timestamp) => {
 const stop = () => {
   stopped = true;
   prevStamp = undefined;
+  client = null;
 };
 
-const start = () => {
+const start = (params) => {
+  client = params;
   elapsed = 0;
   seconds = 0;
   stopped = false;
@@ -63,4 +66,5 @@ export default {
   unsubscribe,
   running: () => !stopped,
   elapsedTime: () => seconds,
+  getClient: () => client,
 };

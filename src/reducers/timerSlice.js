@@ -21,10 +21,11 @@ const timerSlice = createSlice({
       state.entry = payload;
     },
     setNextEntry: (state, { payload }) => {
+      const entry = payload || { };
       if (!state.entry.entry) {
-        state.entry = payload;
+        state.entry = entry;
       } else {
-        state.nextEntry = payload;
+        state.nextEntry = entry;
       }
     },
     addEntryRequest: (state) => {

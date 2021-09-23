@@ -9,6 +9,7 @@ const styles = {
     display: 'flex',
     justifyContent: 'space-around',
     padding: '10px',
+    borderBottom: '1px dotted #ddd',
   },
 };
 

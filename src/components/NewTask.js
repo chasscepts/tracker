@@ -12,6 +12,8 @@ import LdsRing from './LdsRing';
 
 const styles = {
   container: {
+    width: '100%',
+    maxWidth: '400px',
     height: '100%',
     display: 'flex',
     alignItems: 'center',

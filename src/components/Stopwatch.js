@@ -1,17 +1,15 @@
 import { useState, useEffect } from 'react';
-import { Redirect } from 'react-router';
+import { Redirect, useParams } from 'react-router';
 import { useDispatch, useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import css from '../assets/css/Stopwatch.module.css';
 import btn from '../assets/css/button.module.css';
 import sphere from '../assets/images/sphere.png';
 import timer from '../utilities/timer';
-import {
-  commitNext, selectEntry, selectEntryPendingRequestCount,
-  selectNextEntry, updateEntryAsync,
-} from '../reducers/timerSlice';
+import { selectEntryPendingRequestCount, updateEntryAsync } from '../reducers/timerSlice';
 import LdsRing from './LdsRing';
 import { timeStringClock, timeString } from '../utilities/dates';
+import { selectTasks } from '../reducers/tasksSlice';
 
 const styles = {
   ml20: {
@@ -31,9 +29,8 @@ Display.defaultProps = {
   time: 0,
 };
 
-const cocurrentMsg = `Timer is already started for another task.
-Cocurrent running of tasks is not yet supported.
-Stop timer to load a new session.`;
+const cocurrentMsg = `Timer is already started for another task!
+Cocurrent recording of tasks is not yet supported. Commit or Discard old session to load current path.`;
 
 function MessageBoard({ msg, type }) {
   if (!msg) return <></>;
@@ -76,52 +73,59 @@ UpdatingIndicator.propTypes = {
 export default function Stopwatch() {
   const [elapsed, setElapsed] = useState(0);
   const [running, setRunning] = useState(timer.running());
-  const { entry, title } = useSelector(selectEntry);
-  const nextEntry = useSelector(selectNextEntry);
+  const client = timer.getClient();
+  const tasks = useSelector(selectTasks);
   const requestCount = useSelector(selectEntryPendingRequestCount);
   const dispatch = useDispatch();
-
-  if (!entry) {
-    return <Redirect to="/" />;
-  }
+  const { taskId: pathTaskId, id: pathId } = useParams();
 
   const timerId = timer.subscribe((seconds) => {
     setElapsed(seconds);
   });
 
-  const canCommit = !running
-    && nextEntry && nextEntry.entry && nextEntry.entry.id !== entry.id;
+  useEffect(() => () => timer.unsubscribe(timerId));
 
-  useEffect(() => {
-    if (canCommit) {
-      dispatch(commitNext());
+  let id;
+  let newRecord = false;
+  let task;
+  let entry;
+
+  if (client) {
+    id = client.id;
+    task = tasks && tasks.find((t) => t.id === client.task_id);
+    if (running && pathId && client.id !== +pathId) {
+      newRecord = true;
     }
-    return () => timer.unsubscribe(timerId);
-  });
-
-  if (canCommit) {
-    return <></>;
+  } else if (pathId) {
+    id = +pathId;
+    task = tasks && tasks.find((t) => t.id === +pathTaskId);
   }
 
-  const hasNext = (
-    running && nextEntry && nextEntry.entry && entry.id !== nextEntry.entry.id
-  ) || false;
+  if (task) {
+    entry = task.entries.find((e) => e.id === id);
+  }
+
+  const title = (task && task.title) || null;
 
   const btnClass = (color) => `${btn.btn} ${btn[color]} ${btn.round}`;
 
   const handClass = running ? `${css.hand} ${css.active}` : css.hand;
 
   const startTimer = () => {
-    timer.start();
-    setRunning(true);
+    if (!entry) {
+      return;
+    }
+    timer.start({ id: entry.id, task_id: task.id });
+    setTimeout(() => setRunning(true), 0);
   };
 
   const commit = () => {
+    if (!entry) return;
     timer.stop();
     setRunning(false);
-    dispatch(updateEntryAsync(entry, timer.elapsedTime(), title));
-    if (hasNext) {
-      dispatch(commitNext());
+    dispatch(updateEntryAsync(entry, timer.elapsedTime(), task.title));
+    if (newRecord) {
+      <Redirect to={`/tasks/${pathTaskId}/entries/${pathId}`} />;
     }
   };
 
@@ -129,6 +133,9 @@ export default function Stopwatch() {
     timer.stop();
     setRunning(false);
     setElapsed(0);
+    if (newRecord) {
+      <Redirect to={`/tasks/${pathTaskId}/entries/${pathId}`} />;
+    }
   };
 
   return (
@@ -142,10 +149,17 @@ export default function Stopwatch() {
         <Display time={elapsed} />
       </div>
       <UpdatingIndicator count={requestCount} />
+      {entry && (
       <div className={css.entryWrap}>
         {`${title}: ${timeString(entry.duration)} recorded`}
       </div>
-      <MessageBoard msg={hasNext && cocurrentMsg} type="error" />
+      )}
+      {!entry && (
+      <div className={css.entryWrap}>
+        No Task Selected
+      </div>
+      )}
+      <MessageBoard msg={newRecord && cocurrentMsg} type="error" />
       <div className={css.controls}>
         {running && (
         <>
@@ -153,7 +167,12 @@ export default function Stopwatch() {
           <button className={btnClass('red')} type="button" onClick={discard} style={styles.ml20}>Discard</button>
         </>
         )}
-        {!running && <button className={btnClass('blue')} type="button" onClick={startTimer}>Start Task</button>}
+        {!running && entry && (
+        <button className={btnClass('blue')} type="button" onClick={startTimer}>Start Task</button>
+        )}
+        {!running && !entry && (
+        <div className={css.notSelected}>Please Select a Task</div>
+        )}
       </div>
     </div>
   );

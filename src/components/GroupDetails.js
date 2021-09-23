@@ -102,7 +102,7 @@ function getComponents(title, durations) {
     while (rem > 0) {
       rem -= 1;
       last = new Date(last.getFullYear(), last.getMonth(), last.getDate() - 1);
-      const d = formatDate(last);
+      const d = format(last);
       localDurations[d] = 0;
       keys.push(d);
     }

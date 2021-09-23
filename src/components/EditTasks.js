@@ -17,10 +17,12 @@ const styles = {
   container: {
     height: '100%',
     overflow: 'hidden',
+    display: 'flex',
+    flexDirection: 'column',
   },
   form: {
     width: '100%',
-    maxWidth: '350px',
+    maxWidth: '400px',
     border: '1px solid #ddd',
     borderRadius: '5px',
     padding: '15px',
@@ -81,9 +83,11 @@ const styles = {
     backgroundColor: 'transparent',
     cursor: 'pointer',
   },
-  tasksPanel: {
+  tasksPanelWrap: {
     flex: 1,
     overflow: 'auto',
+  },
+  tasksPanel: {
     display: 'flex',
     justifyContent: 'space-between',
     flexFlow: 'row wrap',
@@ -231,18 +235,20 @@ export default function EditTask() {
         </div>
       </div>
       {tasks && (
-      <div style={styles.tasksPanel}>
-        {tasks.map((t) => (
-          <button
-            style={btnStyle(t.id)}
-            key={t.title}
-            name={t.id}
-            type="button"
-            onClick={handleTaskClick}
-          >
-            <span style={styles.taskBtnText}>{t.title}</span>
-          </button>
-        ))}
+      <div style={styles.tasksPanelWrap}>
+        <div style={styles.tasksPanel}>
+          {tasks.map((t) => (
+            <button
+              style={btnStyle(t.id)}
+              key={t.title}
+              name={t.id}
+              type="button"
+              onClick={handleTaskClick}
+            >
+              <span style={styles.taskBtnText}>{t.title}</span>
+            </button>
+          ))}
+        </div>
       </div>
       )}
       {!tasks && (

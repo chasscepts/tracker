@@ -6,7 +6,7 @@ import { selectAuthenticated } from '../reducers/authSlice';
 function RedirectToLogin() {
   const location = useLocation();
 
-  return <Redirect to={{ pathname: '/login', state: { from: location } }} />;
+  return <Redirect to={{ pathname: '/login', state: { from: location.pathname } }} />;
 }
 
 export default function RestrictedRoute({ path, component }) {

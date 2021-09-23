@@ -23,10 +23,7 @@ header h1 {
 }
 
 @media (min-width: 576px) {
-  .container {
-    width: 540px;
-    border: 1px solid #ddd;
-  }
+  
 }
 
 @media (min-width: 768px) {

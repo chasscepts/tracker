@@ -16,6 +16,7 @@ const styles = {
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'center',
+    alignItems: 'center',
     padding: '30px',
   },
   innerWrap: {
@@ -23,6 +24,8 @@ const styles = {
     padding: '15px',
     border: '1px solid #ddd',
     borderRadius: '8px',
+    width: '100%',
+    maxWidth: '400px',
   },
   h2: {
     color: COLORS.primary,
@@ -89,7 +92,7 @@ export default function RegistrationPage() {
   };
 
   return (
-    <div style={styles.container}>
+    <div style={styles.container} className="container">
       <div style={styles.innerWrap}>
         <h2 style={styles.h2}>Registration</h2>
         {localError && <div style={styles.error}>{localError}</div>}
