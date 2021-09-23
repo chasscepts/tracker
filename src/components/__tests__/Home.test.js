@@ -2,7 +2,7 @@ import React from 'react';
 import { MemoryRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import renderer from 'react-test-renderer';
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import Home from '../Home';
 import { fetchGroups, fetchTasks, fetchUser } from '../../api';
@@ -22,7 +22,9 @@ const tasks = [
     group_id: 1,
     user_id: 1,
     entries: [
-      { id: 1, task_id: 1, entry_date: '2021-09-21', duration: 0 },
+      {
+        id: 1, task_id: 1, entry_date: '2021-09-21', duration: 0,
+      },
     ],
   },
 ];
@@ -46,7 +48,7 @@ const login = async () => {
       <MemoryRouter>
         <LoginPage />
       </MemoryRouter>
-    </Provider>
+    </Provider>,
   );
 
   userEvent.type(screen.getByPlaceholderText('Enter Email'), 'test@example.com');
@@ -54,12 +56,10 @@ const login = async () => {
   userEvent.click(screen.getByText('Log In'));
 
   await Promise.resolve();
-
-  //  await waitFor(() => expect(fetchUser).toHaveBeenCalledTimes(1));
-}
+  return Promise.resolve();
+};
 
 describe('Home', () => {
-
   it('matches snapshot', () => {
     formattedDate.mockReturnValue('September 21, 2021');
     const tree = renderer
@@ -86,7 +86,7 @@ describe('Home', () => {
       await Promise.resolve();
       groups.forEach((group) => expect(screen.getByText(group.title)).toBeInTheDocument());
     });
-  
+
     it('displays the tasks links', async () => {
       fetchGroups.mockResolvedValue(groups);
       fetchTasks.mockResolvedValue(tasks);

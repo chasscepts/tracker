@@ -2,7 +2,7 @@ import React from 'react';
 import { MemoryRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import renderer from 'react-test-renderer';
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import LoginPage from '../LoginPage';
 import store from '../../app/store';
@@ -19,7 +19,9 @@ const tasks = [
     group_id: 1,
     user_id: 1,
     entries: [
-      { id: 1, task_id: 1, entry_date: '2021-09-21', duration: 0 },
+      {
+        id: 1, task_id: 1, entry_date: '2021-09-21', duration: 0,
+      },
     ],
   },
 ];
@@ -56,7 +58,7 @@ describe('Login', () => {
     fetchUser.mockResolvedValue({ user: { email: 'test@example.com', token: '111111111' } });
     fetchGroups.mockResolvedValue(groups);
     fetchTasks.mockResolvedValue(tasks);
-  
+
     render(<Wrapper />);
     userEvent.type(screen.getByPlaceholderText('Enter Email'), 'test.example.com');
     userEvent.type(screen.getByPlaceholderText('Enter Password'), 'password');

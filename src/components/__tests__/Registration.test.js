@@ -1,5 +1,5 @@
 import React from 'react';
-import { MemoryRouter, Switch, Route } from 'react-router-dom';
+import { MemoryRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import renderer from 'react-test-renderer';
 import { render, screen } from '@testing-library/react';
@@ -40,7 +40,7 @@ describe('Registration', () => {
 
   it('calls api to register user', async () => {
     registerUser.mockResolvedValue({ user: { email: 'test@example.com', id: 1 } });
-  
+
     render(<Wrapper />);
     userEvent.type(screen.getByPlaceholderText('Enter Email'), 'test.example.com');
     userEvent.type(screen.getByPlaceholderText('Enter Password'), 'password');
