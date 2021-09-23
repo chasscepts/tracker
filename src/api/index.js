@@ -92,7 +92,7 @@ export const fetchUser = (email, password) => {
 
 export const registerUser = (email, password) => {
   const instance = axios.create({
-    baseURL: 'http://localhost:3000/',
+    baseURL,
     responseType: 'json',
   });
   return post(instance, '/auth/register', { email, password });
