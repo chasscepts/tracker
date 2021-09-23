@@ -12,22 +12,24 @@ const styles = {
     height: '150px',
     overflow: 'hidden',
   },
-  feedback: {
+  wrap: {
     position: 'absolute',
     left: 0,
     top: 0,
     width: '100%',
     height: '100%',
     overflow: 'auto',
+    backgroundColor: '#fff',
+  },
+  feedback: {
+    width: '100%',
     fontWeight: 'bold',
     fontSize: '0.8rem',
     padding: '8px',
     border: '1px solid #ddd',
     borderRadius: '4px',
     backgroundColor: '#d8dfe4',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
+    textAlign: 'center',
   },
   btn: {
     position: 'absolute',
@@ -60,8 +62,8 @@ function Feedback({ feedback }) {
   const close = () => dispatch(removeFeedback(feedback.id));
 
   return (
-    <div style={{ ...styles.feedback, ...style }}>
-      <div><span>{message}</span></div>
+    <div style={{ ...styles.wrap, ...style }}>
+      <div style={styles.feedback}>{message}</div>
       <button style={styles.btn} type="button" onClick={close}>X</button>
     </div>
   );

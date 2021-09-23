@@ -1,6 +1,8 @@
 import axios from 'axios';
 import { today } from '../utilities/dates';
 
+const baseURL = 'http://localhost:3000/';
+
 const normalizeError = (err) => {
   if (!err) {
     return { message: 'An unknown error encountered. Please try again.' };
@@ -22,7 +24,7 @@ const normalizeError = (err) => {
 
 const instantiate = (token) => {
   const instance = axios.create({
-    baseURL: 'https://time-max.herokuapp.com/',
+    baseURL,
     responseType: 'json',
   });
   instance.defaults.headers.common.Authorization = `Bearer ${token}`;
@@ -82,7 +84,7 @@ const destroy = (instance, path) => new Promise((resolve, reject) => {
 
 export const fetchUser = (email, password) => {
   const instance = axios.create({
-    baseURL: 'http://localhost:3000/',
+    baseURL,
     responseType: 'json',
   });
   return post(instance, '/auth', { email, password });

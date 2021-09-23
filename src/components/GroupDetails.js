@@ -9,7 +9,7 @@ import {
   selectDetailsHasPendingError,
 } from '../reducers/detailsSlice';
 import LoadingPanel from './LoadingPanel';
-import { today, format } from '../utilities/dates';
+import { today, format, toDate } from '../utilities/dates';
 import Status from './Status';
 
 const weekDays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
@@ -95,6 +95,18 @@ function getComponents(title, durations) {
   });
   const { length } = keys;
   if (length === 0) return <></>;
+  const localDurations = { ...durations };
+  if (length < 14) {
+    let rem = 14 - length;
+    let last = toDate(keys[length - 1]);
+    while (rem > 0) {
+      rem -= 1;
+      last = new Date(last.getFullYear(), last.getMonth(), last.getDate() - 1);
+      const d = formatDate(last);
+      localDurations[d] = 0;
+      keys.push(d);
+    }
+  }
   const components = [];
   let pointer = 0;
   let currentDate = new Date();
@@ -105,7 +117,7 @@ function getComponents(title, durations) {
 
   if (date === today()) {
     pointer += 1;
-    components.push(getRow(title, date, durations, keys, pointer));
+    components.push(getRow(title, date, localDurations, keys, pointer));
     date = keys[pointer];
   }
 
@@ -117,7 +129,7 @@ function getComponents(title, durations) {
 
   if (weekDay >= 0 && date === format(yesterday)) {
     pointer += 1;
-    components.push(getRow(title, date, durations, keys, pointer));
+    components.push(getRow(title, date, localDurations, keys, pointer));
     date = keys[pointer];
   }
 
@@ -129,7 +141,7 @@ function getComponents(title, durations) {
     components.push(<Label label={weekDays[weekDay]} />);
     if (date === format(currentDate)) {
       pointer += 1;
-      components.push(getRow(title, date, durations, keys, pointer));
+      components.push(getRow(title, date, localDurations, keys, pointer));
       date = keys[pointer];
     }
     currentDate = previousDay(currentDate);
@@ -142,7 +154,7 @@ function getComponents(title, durations) {
     if (pointer >= length) return components;
     if (date === format(currentDate)) {
       pointer += 1;
-      components.push(getRow(title, date, durations, keys, pointer));
+      components.push(getRow(title, date, localDurations, keys, pointer));
       date = keys[pointer];
     }
     currentDate = previousDay(currentDate);
@@ -158,7 +170,7 @@ function getComponents(title, durations) {
       month = m;
     }
     pointer += 1;
-    components.push(getRow(title, date, durations, keys, pointer));
+    components.push(getRow(title, date, localDurations, keys, pointer));
     date = keys[pointer];
   }
 
