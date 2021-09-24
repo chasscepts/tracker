@@ -3,12 +3,11 @@ import { MemoryRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import renderer from 'react-test-renderer';
 import { render, screen } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
 import Home from '../Home';
-import { fetchGroups, fetchTasks, fetchUser } from '../../api';
+import { fetchGroups, fetchTasks } from '../../api';
 import { formattedDate } from '../../utilities/dates';
 import store from '../../app/store';
-import LoginPage from '../LoginPage';
+import login from '../test_helpers/login';
 
 jest.mock('../../api');
 jest.mock('../../utilities/dates');
@@ -39,26 +38,6 @@ function Wrapper() {
   );
 }
 
-const login = async () => {
-  if (store.getState().auth.user) return Promise.resolve();
-
-  fetchUser.mockResolvedValue({ user: { email: 'test@example.com', token: '111111111' } });
-  render(
-    <Provider store={store}>
-      <MemoryRouter>
-        <LoginPage />
-      </MemoryRouter>
-    </Provider>,
-  );
-
-  userEvent.type(screen.getByPlaceholderText('Enter Email'), 'test@example.com');
-  userEvent.type(screen.getByPlaceholderText('Enter Password'), 'password');
-  userEvent.click(screen.getByText('Log In'));
-
-  await Promise.resolve();
-  return Promise.resolve();
-};
-
 describe('Home', () => {
   it('matches snapshot', () => {
     formattedDate.mockReturnValue('September 21, 2021');
@@ -75,13 +54,10 @@ describe('Home', () => {
   });
 
   describe('api calls', () => {
-    beforeEach(async () => {
-    });
-
     it('displays the groups links', async () => {
       fetchGroups.mockResolvedValue(groups);
       fetchTasks.mockResolvedValue(tasks);
-      await login();
+      await login(store);
       render(<Wrapper />);
       await Promise.resolve();
       groups.forEach((group) => expect(screen.getByText(group.title)).toBeInTheDocument());
@@ -90,7 +66,7 @@ describe('Home', () => {
     it('displays the tasks links', async () => {
       fetchGroups.mockResolvedValue(groups);
       fetchTasks.mockResolvedValue(tasks);
-      await login();
+      await login(store);
       render(<Wrapper />);
       await Promise.resolve();
       tasks.forEach((task) => expect(screen.getByText(task.title)).toBeInTheDocument());
