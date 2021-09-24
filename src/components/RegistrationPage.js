@@ -84,7 +84,9 @@ export default function RegistrationPage() {
     }
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
     if (email && password) {
       setBusy(true);
       dispatch(register(email, password));
@@ -93,16 +95,16 @@ export default function RegistrationPage() {
 
   return (
     <div style={styles.container} className="container">
-      <div style={styles.innerWrap}>
+      <form style={styles.innerWrap} onSubmit={handleSubmit}>
         <h2 style={styles.h2}>Registration</h2>
         {localError && <div style={styles.error}>{localError}</div>}
         <input className={mb.text} type="text" name="email" value={email} placeholder="Enter Email" onChange={handleTextChange} />
         <input className={mb.text} type="password" name="password" value={password} placeholder="Enter Password" onChange={handleTextChange} />
-        <LoadingButton label="Register" loading={busy} onClick={handleSubmit} styles={{ backgroundColor: '#9e0606' }} />
+        <LoadingButton type="submit" label="Register" loading={busy} styles={{ backgroundColor: '#9e0606' }} />
         <div style={styles.controls}>
           <Link to="/login" style={styles.link}>Login</Link>
         </div>
-      </div>
+      </form>
     </div>
   );
 }

@@ -113,15 +113,10 @@ export default function NewTask() {
     }
   };
 
-  const submitForm = () => {
+  const submitForm = (e) => {
+    e.preventDefault();
     if (groupId && title) {
       dispatch(createTaskAsync(groupId, title));
-    }
-  };
-
-  const handleEnterKey = (evt) => {
-    if (evt.key === 'Enter') {
-      submitForm();
     }
   };
 
@@ -130,29 +125,33 @@ export default function NewTask() {
   return (
     <div style={styles.container}>
       <div style={styles.inner}>
-        <h2 style={styles.h2}>New Task</h2>
-        {requestCount > 0
-        && (
-        <div style={styles.loadingWrap}>
-          <LdsRing width={20} color={COLORS.primary} />
-          <div style={styles.loadingMsg}>{loadingMessage}</div>
-        </div>
-        )}
-        <div style={styles.label}>Please Select Task Category</div>
-        <select style={styles.input} name="id" value={groupId} onChange={handleChange}>
-          {options.map((g) => <option key={g.title} value={g.id}>{g.title}</option>)}
-        </select>
-        <div style={styles.label}>Enter Title</div>
-        <input style={styles.input} name="title" value={title} onChange={handleChange} onKeyDown={handleEnterKey} />
-        <div style={styles.controls}>
-          <button
-            className={`${button.btn} ${button.blue} ${button.round}`}
-            type="button"
-            onClick={submitForm}
-          >
-            Create Task
-          </button>
-        </div>
+        <form onSubmit={submitForm}>
+          <h2 style={styles.h2}>New Task</h2>
+          {requestCount > 0
+          && (
+          <div style={styles.loadingWrap}>
+            <LdsRing width={20} color={COLORS.primary} />
+            <div style={styles.loadingMsg}>{loadingMessage}</div>
+          </div>
+          )}
+          <div style={styles.label}>Please Select Task Category</div>
+          <select style={styles.input} name="id" value={groupId} onChange={handleChange}>
+            {options.map((g) => <option key={g.title} value={g.id}>{g.title}</option>)}
+          </select>
+          <div style={styles.label}>Enter Title</div>
+          <input
+            style={styles.input}
+            name="title"
+            value={title}
+            onChange={handleChange}
+            placeholder="Enter Title"
+          />
+          <div style={styles.controls}>
+            <button className={`${button.btn} ${button.blue} ${button.round}`} type="submit">
+              Create Task
+            </button>
+          </div>
+        </form>
       </div>
     </div>
   );

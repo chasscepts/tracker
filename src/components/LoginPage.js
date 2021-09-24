@@ -80,7 +80,8 @@ export default function LoginPage() {
     }
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = (e) => {
+    e.preventDefault();
     if (email && password) {
       setBusy(true);
       dispatch(login(email, password));
@@ -89,16 +90,16 @@ export default function LoginPage() {
 
   return (
     <div style={styles.container} className="container">
-      <div style={styles.innerWrap}>
+      <form style={styles.innerWrap} onSubmit={handleSubmit}>
         <h2 style={styles.h2}>Sign In</h2>
         {localError && <div style={styles.error}>{localError}</div>}
         <input className={mb.text} type="text" name="email" value={email} placeholder="Enter Email" onChange={handleTextChange} />
         <input className={mb.text} type="password" name="password" value={password} placeholder="Enter Password" onChange={handleTextChange} />
-        <LoadingButton label="Log In" onClick={handleSubmit} loading={busy} />
+        <LoadingButton type="submit" label="Log In" loading={busy} />
         <div style={styles.controls}>
           <Link to="/register" style={styles.link}>Register</Link>
         </div>
-      </div>
+      </form>
     </div>
   );
 }

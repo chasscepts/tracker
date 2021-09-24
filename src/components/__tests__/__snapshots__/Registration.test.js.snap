@@ -14,7 +14,8 @@ exports[`Registration matches snapshot 1`] = `
     }
   }
 >
-  <div
+  <form
+    onSubmit={[Function]}
     style={
       Object {
         "border": "1px solid #ddd",
@@ -52,7 +53,7 @@ exports[`Registration matches snapshot 1`] = `
       value=""
     />
     <button
-      onClick={[Function]}
+      onClick={null}
       style={
         Object {
           "backgroundColor": "#9e0606",
@@ -72,7 +73,7 @@ exports[`Registration matches snapshot 1`] = `
           "width": "100%",
         }
       }
-      type="button"
+      type="submit"
     >
       Register
     </button>
@@ -98,6 +99,6 @@ exports[`Registration matches snapshot 1`] = `
         Login
       </a>
     </div>
-  </div>
+  </form>
 </div>
 `;

@@ -1,13 +1,12 @@
 import React from 'react';
-import { MemoryRouter } from 'react-router-dom';
-import { Provider } from 'react-redux';
 import renderer from 'react-test-renderer';
 import { render, screen } from '@testing-library/react';
+import Wrapper from '../../test_helpers/wrapper';
 import Home from '../Home';
 import { fetchGroups, fetchTasks } from '../../api';
 import { formattedDate } from '../../utilities/dates';
 import store from '../../app/store';
-import login from '../test_helpers/login';
+import login from '../../test_helpers/login';
 
 jest.mock('../../api');
 jest.mock('../../utilities/dates');
@@ -28,28 +27,18 @@ const tasks = [
   },
 ];
 
-function Wrapper() {
-  return (
-    <Provider store={store}>
-      <MemoryRouter>
-        <Home />
-      </MemoryRouter>
-    </Provider>
-  );
-}
-
 describe('Home', () => {
   it('matches snapshot', () => {
     formattedDate.mockReturnValue('September 21, 2021');
     const tree = renderer
-      .create(<Wrapper />)
+      .create(<Wrapper Component={Home} />)
       .toJSON();
     expect(tree).toMatchSnapshot();
   });
 
   it('displays the date', () => {
     formattedDate.mockReturnValue('September 21, 2021');
-    render(<Wrapper />);
+    render(<Wrapper Component={Home} />);
     expect(screen.getByText('September 21, 2021')).toBeInTheDocument();
   });
 
@@ -58,7 +47,7 @@ describe('Home', () => {
       fetchGroups.mockResolvedValue(groups);
       fetchTasks.mockResolvedValue(tasks);
       await login(store);
-      render(<Wrapper />);
+      render(<Wrapper Component={Home} />);
       await Promise.resolve();
       groups.forEach((group) => expect(screen.getByText(group.title)).toBeInTheDocument());
     });
@@ -67,7 +56,7 @@ describe('Home', () => {
       fetchGroups.mockResolvedValue(groups);
       fetchTasks.mockResolvedValue(tasks);
       await login(store);
-      render(<Wrapper />);
+      render(<Wrapper Component={Home} />);
       await Promise.resolve();
       tasks.forEach((task) => expect(screen.getByText(task.title)).toBeInTheDocument());
     });

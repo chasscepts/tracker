@@ -5,7 +5,7 @@ import timerReducer from '../reducers/timerSlice';
 import detailsReducer from '../reducers/detailsSlice';
 import feedbackReducer from '../reducers/feedbackSlice';
 
-export default configureStore({
+export const createStore = () => configureStore({
   reducer: {
     auth: authReducer,
     tasks: tasksReducer,
@@ -14,3 +14,7 @@ export default configureStore({
     feedback: feedbackReducer,
   },
 });
+
+const store = createStore();
+
+export default store;

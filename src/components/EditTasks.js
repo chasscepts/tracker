@@ -150,15 +150,10 @@ export default function EditTask() {
     }
   };
 
-  const submitForm = () => {
+  const submitForm = (e) => {
+    e.preventDefault();
     if (title && selectedTask) {
       dispatch(updateTaskAsync(selectedTask.id, title));
-    }
-  };
-
-  const handleEnterKey = (evt) => {
-    if (evt.key === 'Enter') {
-      submitForm();
     }
   };
 
@@ -190,7 +185,7 @@ export default function EditTask() {
 
   return (
     <div style={styles.container}>
-      <div style={styles.form}>
+      <form style={styles.form} onSubmit={submitForm}>
         <h2 style={styles.h2}>Edit Task</h2>
         {requestCount > 0
         && (
@@ -213,15 +208,10 @@ export default function EditTask() {
           name="title"
           value={title}
           onChange={handleChange}
-          onKeyDown={handleEnterKey}
           placeholder="Enter New Title"
         />
         <div style={styles.controls}>
-          <button
-            className={`${button.btn} ${button.blue} ${button.round}`}
-            type="button"
-            onClick={submitForm}
-          >
+          <button className={`${button.btn} ${button.blue} ${button.round}`} type="submit">
             Edit
           </button>
           <button
@@ -233,7 +223,7 @@ export default function EditTask() {
             Delete
           </button>
         </div>
-      </div>
+      </form>
       {tasks && (
       <div style={styles.tasksPanelWrap}>
         <div style={styles.tasksPanel}>
@@ -241,8 +231,8 @@ export default function EditTask() {
             <button
               style={btnStyle(t.id)}
               key={t.title}
-              name={t.id}
               type="button"
+              name={t.id}
               onClick={handleTaskClick}
             >
               <span style={styles.taskBtnText}>{t.title}</span>

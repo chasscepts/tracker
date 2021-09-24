@@ -1,0 +1,149 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`EditTask matches snapshot 1`] = `
+<div
+  style={
+    Object {
+      "display": "flex",
+      "flexDirection": "column",
+      "height": "100%",
+      "overflow": "hidden",
+    }
+  }
+>
+  <form
+    onSubmit={[Function]}
+    style={
+      Object {
+        "border": "1px solid #ddd",
+        "borderRadius": "5px",
+        "margin": "5px auto 15px",
+        "maxWidth": "400px",
+        "padding": "15px",
+        "width": "100%",
+      }
+    }
+  >
+    <h2
+      style={
+        Object {
+          "borderBottom": "1px dotted #62b5e5",
+          "color": "#62b5e5",
+          "marginBottom": "15px",
+          "paddingBottom": "5px",
+        }
+      }
+    >
+      Edit Task
+    </h2>
+    <div
+      style={
+        Object {
+          "color": "#9e0606",
+          "fontSize": "0.8rem",
+          "fontWeight": "bold",
+          "marginBottom": "5px",
+        }
+      }
+    >
+      You have not selected any task
+    </div>
+    <input
+      name="title"
+      onChange={[Function]}
+      placeholder="Enter New Title"
+      style={
+        Object {
+          "border": "1px solid #ddd",
+          "color": "inherit",
+          "display": "block",
+          "marginBottom": "15px",
+          "padding": "7px",
+          "width": "100%",
+        }
+      }
+      value=""
+    />
+    <div
+      style={
+        Object {
+          "display": "flex",
+          "justifyContent": "flex-end",
+        }
+      }
+    >
+      <button
+        className="btn blue round"
+        type="submit"
+      >
+        Edit
+      </button>
+      <button
+        className="btn red round"
+        onClick={[Function]}
+        style={
+          Object {
+            "marginLeft": "20px",
+          }
+        }
+        type="button"
+      >
+        Delete
+      </button>
+    </div>
+  </form>
+  <div
+    style={
+      Object {
+        "flex": 1,
+        "overflow": "auto",
+      }
+    }
+  >
+    <div
+      style={
+        Object {
+          "display": "flex",
+          "flexFlow": "row wrap",
+          "justifyContent": "space-between",
+          "padding": "10px",
+        }
+      }
+    >
+      <button
+        name={1}
+        onClick={[Function]}
+        style={
+          Object {
+            "alignItems": "center",
+            "backgroundColor": "transparent",
+            "border": "1px solid #ddd",
+            "borderRadius": "4px",
+            "color": "inherit",
+            "cursor": "pointer",
+            "display": "flex",
+            "fontSize": "0.9rem",
+            "fontWeight": "bold",
+            "height": "80px",
+            "justifyContent": "center",
+            "margin": "10px",
+            "padding": "5px",
+            "width": "80px",
+          }
+        }
+        type="button"
+      >
+        <span
+          style={
+            Object {
+              "pointerEvents": "none",
+            }
+          }
+        >
+          Task 1
+        </span>
+      </button>
+    </div>
+  </div>
+</div>
+`;

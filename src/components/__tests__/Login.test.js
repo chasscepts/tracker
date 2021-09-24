@@ -1,9 +1,8 @@
 import React from 'react';
-import { MemoryRouter } from 'react-router-dom';
-import { Provider } from 'react-redux';
 import renderer from 'react-test-renderer';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import Wrapper from '../../test_helpers/wrapper';
 import LoginPage from '../LoginPage';
 import store from '../../app/store';
 import { fetchGroups, fetchTasks, fetchUser } from '../../api';
@@ -26,31 +25,21 @@ const tasks = [
   },
 ];
 
-function Wrapper() {
-  return (
-    <Provider store={store}>
-      <MemoryRouter>
-        <LoginPage />
-      </MemoryRouter>
-    </Provider>
-  );
-}
-
 describe('Login', () => {
   it('matches snapshot', () => {
     const tree = renderer
-      .create(<Wrapper />)
+      .create(<Wrapper store={store} Component={LoginPage} />)
       .toJSON();
     expect(tree).toMatchSnapshot();
   });
 
   it('displays the heading', () => {
-    render(<Wrapper />);
+    render(<Wrapper store={store} Component={LoginPage} />);
     expect(screen.getByText('Sign In')).toBeInTheDocument();
   });
 
   it('displays the register link', async () => {
-    render(<Wrapper />);
+    render(<Wrapper store={store} Component={LoginPage} />);
     expect(screen.getByText('Register')).toBeInTheDocument();
   });
 
@@ -59,7 +48,7 @@ describe('Login', () => {
     fetchGroups.mockResolvedValue(groups);
     fetchTasks.mockResolvedValue(tasks);
 
-    render(<Wrapper />);
+    render(<Wrapper store={store} Component={LoginPage} />);
     userEvent.type(screen.getByPlaceholderText('Enter Email'), 'test.example.com');
     userEvent.type(screen.getByPlaceholderText('Enter Password'), 'password');
     await userEvent.click(screen.getByText('Log In'));

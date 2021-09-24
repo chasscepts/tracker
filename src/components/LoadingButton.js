@@ -30,10 +30,18 @@ const lStyles = {
 };
 
 export default function LoadingButton({
-  label, loading, styles, onClick, ringColor,
+  type, label, loading, styles, onClick, ringColor,
 }) {
   if (!loading) {
-    return <button style={{ ...lStyles.btn, ...styles }} type="button" onClick={onClick}>{label}</button>;
+    return (
+      <button
+        style={{ ...lStyles.btn, ...styles }}
+        type={type === 'submit' ? 'submit' : 'button'}
+        onClick={onClick}
+      >
+        {label}
+      </button>
+    );
   }
   return (
     <div style={{ ...lStyles.btn, ...lStyles.busy, ...styles }}>
@@ -43,15 +51,18 @@ export default function LoadingButton({
 }
 
 LoadingButton.propTypes = {
+  type: PropTypes.string,
   label: PropTypes.string.isRequired,
   loading: PropTypes.bool,
   styles: PropTypes.object,
-  onClick: PropTypes.func.isRequired,
+  onClick: PropTypes.func,
   ringColor: PropTypes.string,
 };
 
 LoadingButton.defaultProps = {
+  type: 'button',
   loading: false,
   styles: {},
   ringColor: '#fff',
+  onClick: null,
 };
