@@ -1,0 +1,29 @@
+.btn {
+  padding: 8px 20px;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+}
+
+.btn.sm {
+  padding: 3px 5px;
+}
+
+.btn.round {
+  border-radius: 4px;
+}
+
+.btn.blue {
+  color: #fff;
+  background-color: #62b5e5;
+}
+
+.btn.red {
+  color: #fff;
+  background-color: #d42020;
+}
+
+.btn:hover {
+  opacity: 0.8;
+}

@@ -1,0 +1,121 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`NewTask matches snapshot 1`] = `
+<div
+  style={
+    Object {
+      "alignItems": "center",
+      "display": "flex",
+      "height": "100%",
+      "justifyContent": "center",
+      "maxWidth": "400px",
+      "overflow": "hidden",
+      "width": "100%",
+    }
+  }
+>
+  <div
+    style={
+      Object {
+        "border": "1px solid #ddd",
+        "borderRadius": "5px",
+        "maxWidth": "350px",
+        "overflow": "auto",
+        "padding": "15px",
+        "width": "100%",
+      }
+    }
+  >
+    <form
+      onSubmit={[Function]}
+    >
+      <h2
+        style={
+          Object {
+            "borderBottom": "1px dotted #62b5e5",
+            "color": "#62b5e5",
+            "marginBottom": "15px",
+            "paddingBottom": "5px",
+          }
+        }
+      >
+        New Task
+      </h2>
+      <div
+        style={
+          Object {
+            "fontSize": "0.9rem",
+            "fontWeight": "bold",
+            "marginBottom": "3px",
+          }
+        }
+      >
+        Please Select Task Category
+      </div>
+      <select
+        name="id"
+        onChange={[Function]}
+        style={
+          Object {
+            "border": "1px solid #ddd",
+            "color": "inherit",
+            "display": "block",
+            "marginBottom": "15px",
+            "padding": "7px",
+            "width": "100%",
+          }
+        }
+        value={1}
+      >
+        <option
+          value={1}
+        >
+          Group 1
+        </option>
+      </select>
+      <div
+        style={
+          Object {
+            "fontSize": "0.9rem",
+            "fontWeight": "bold",
+            "marginBottom": "3px",
+          }
+        }
+      >
+        Enter Title
+      </div>
+      <input
+        name="title"
+        onChange={[Function]}
+        placeholder="Enter Title"
+        style={
+          Object {
+            "border": "1px solid #ddd",
+            "color": "inherit",
+            "display": "block",
+            "marginBottom": "15px",
+            "padding": "7px",
+            "width": "100%",
+          }
+        }
+        value=""
+      />
+      <div
+        style={
+          Object {
+            "display": "flex",
+            "justifyContent": "flex-end",
+          }
+        }
+      >
+        <button
+          className="btn blue round"
+          type="submit"
+        >
+          Create Task
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+`;

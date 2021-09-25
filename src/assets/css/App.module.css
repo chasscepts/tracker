@@ -1,0 +1,23 @@
+header {
+  padding: 15px;
+  background-color: #62b5e5;
+}
+
+header h1 {
+  color: #fff;
+  text-align: center;
+  font-size: 1.4rem;
+}
+
+.container {
+  margin: auto;
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.page {
+  flex: 1;
+  overflow: hidden;
+}
