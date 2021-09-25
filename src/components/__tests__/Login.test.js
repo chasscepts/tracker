@@ -1,6 +1,6 @@
 import React from 'react';
 import renderer from 'react-test-renderer';
-import { render, screen, act } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import Wrapper from '../../test_helpers/wrapper';
 import LoginPage from '../LoginPage';
@@ -27,7 +27,7 @@ const tasks = [
 
 describe('Login', () => {
   it('matches snapshot', () => {
-    const tree = renderer .create(<Wrapper store={store} Component={LoginPage} />);
+    const tree = renderer.create(<Wrapper store={store} Component={LoginPage} />);
     expect(tree.toJSON()).toMatchSnapshot();
     tree.unmount();
   });
@@ -46,18 +46,10 @@ describe('Login', () => {
     fetchUser.mockResolvedValue({ user: { email: 'test@example.com', token: '111111111' } });
     fetchGroups.mockResolvedValue(groups);
     fetchTasks.mockResolvedValue(tasks);
-
-    await act(() => {
-      render(<Wrapper store={store} Component={LoginPage} />);
-      return Promise.resolve();
-    });
+    render(<Wrapper store={store} Component={LoginPage} />);
     userEvent.type(screen.getByPlaceholderText('Enter Email'), 'test.example.com');
     userEvent.type(screen.getByPlaceholderText('Enter Password'), 'password');
-    await act(() => {
-      userEvent.click(screen.getByText('Log In'));
-      return Promise.resolve();
-    });
-    await Promise.resolve();
+    userEvent.click(screen.getByText('Log In'));
     expect(fetchUser).toHaveBeenCalledTimes(1);
   });
 });

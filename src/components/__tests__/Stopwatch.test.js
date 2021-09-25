@@ -1,6 +1,8 @@
 import React from 'react';
 import renderer from 'react-test-renderer';
+import Router from 'react-router';
 import { render, screen, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import Wrapper from '../../test_helpers/wrapper';
 import Stopwatch from '../Stopwatch';
 import { updateEntry } from '../../api';
@@ -8,8 +10,6 @@ import { createStore } from '../../app/store';
 import login from '../../test_helpers/login';
 import { setTasks } from '../../reducers/tasksSlice';
 import { subscribe, elapsedTime } from '../../utilities/timer';
-import Router from 'react-router';
-import userEvent from '@testing-library/user-event';
 
 jest.mock('../../utilities/timer', () => ({
   ...jest.requireActual('../../utilities/timer'),
@@ -44,14 +44,14 @@ describe('Stopwatch', () => {
 
   it('displays a "select task" prompt', () => {
     const store = createStore();
-    login(store); 
+    login(store);
     render(<Wrapper Component={Stopwatch} store={store} />);
     expect(screen.getByText('Please Select a Task')).toBeInTheDocument();
   });
 
   it('does not display start button when entry is not selected', () => {
     const store = createStore();
-    login(store); 
+    login(store);
     render(<Wrapper Component={Stopwatch} store={store} />);
     expect(screen.queryByRole('button', { name: 'Start Task' })).not.toBeInTheDocument();
   });
