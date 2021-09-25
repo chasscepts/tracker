@@ -11,6 +11,10 @@
 - React
 - Redux
 
+## Requirements
+
+- The App makes API calls to a companion backend project - tracker-api. You can find the repo on [github](https://github.com/chasscepts/tracker-api).
+
 ## Live Demo
 
 [demo](https://tram.netlify.app/login)
