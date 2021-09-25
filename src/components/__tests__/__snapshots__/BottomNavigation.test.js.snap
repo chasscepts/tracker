@@ -1,0 +1,80 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`BottomNavigation matches snapshot 1`] = `
+<div
+  className="container"
+>
+  <a
+    href="/"
+    onClick={[Function]}
+  >
+    <div
+      className="nav active"
+    >
+      <img
+        alt="/"
+        src="home.png"
+      />
+      <div
+        className="label"
+      >
+        Home
+      </div>
+    </div>
+  </a>
+  <a
+    href="/new"
+    onClick={[Function]}
+  >
+    <div
+      className="nav"
+    >
+      <img
+        alt="/new"
+        src="plus.png"
+      />
+      <div
+        className="label"
+      >
+        New Task
+      </div>
+    </div>
+  </a>
+  <a
+    href="/edit"
+    onClick={[Function]}
+  >
+    <div
+      className="nav"
+    >
+      <img
+        alt="/edit"
+        src="edit-task.png"
+      />
+      <div
+        className="label"
+      >
+        Edit Tasks
+      </div>
+    </div>
+  </a>
+  <a
+    href="/charts"
+    onClick={[Function]}
+  >
+    <div
+      className="nav"
+    >
+      <img
+        alt="/charts"
+        src="chart.png"
+      />
+      <div
+        className="label"
+      >
+        Charts
+      </div>
+    </div>
+  </a>
+</div>
+`;
