@@ -17,7 +17,7 @@
 
 ## Live Demo
 
-[demo](https://tram.netlify.app/login)
+[demo](https://tram.netlify.app/)
 
 ## Getting Started
 
