@@ -10,10 +10,9 @@ describe('BottomNavigation', () => {
   it('matches snapshot', async () => {
     const store = createStore();
     login(store);
-    const tree = renderer
-      .create(<Wrapper store={store} Component={BottomNavigation} />)
-      .toJSON();
-    expect(tree).toMatchSnapshot();
+    const tree = renderer.create(<Wrapper store={store} Component={BottomNavigation} />);
+    expect(tree.toJSON()).toMatchSnapshot();
+    tree.unmount();
   });
 
   it('displays all the links', () => {

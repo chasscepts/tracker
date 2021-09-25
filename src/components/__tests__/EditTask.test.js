@@ -29,10 +29,9 @@ describe('EditTask', () => {
   it('matches snapshot', async () => {
     const store = createStore();
     store.dispatch(setTasks(tasks));
-    const tree = renderer
-      .create(<Wrapper store={store} Component={EditTasks} />)
-      .toJSON();
+    const tree = renderer.create(<Wrapper store={store} Component={EditTasks} />);
     expect(tree).toMatchSnapshot();
+    tree.unmount();
   });
 
   it('update calls api with correct parameter', async () => {

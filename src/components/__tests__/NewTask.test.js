@@ -17,10 +17,9 @@ describe('NewTask', () => {
   it('matches snapshot', async () => {
     const store = createStore();
     store.dispatch(setGroups(groups));
-    const tree = renderer
-      .create(<Wrapper store={store} Component={NewTask} />)
-      .toJSON();
-    expect(tree).toMatchSnapshot();
+    const tree = renderer.create(<Wrapper store={store} Component={NewTask} />);
+    expect(tree.toJSON()).toMatchSnapshot();
+    tree.unmount();
   });
 
   it('calls api to create new task with correct parameter', async () => {

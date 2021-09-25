@@ -6,15 +6,15 @@ import Wrapper from '../../test_helpers/wrapper';
 import RegistrationPage from '../RegistrationPage';
 import store from '../../app/store';
 import { registerUser } from '../../api';
+import { act } from 'react-dom/test-utils';
 
 jest.mock('../../api');
 
 describe('Registration', () => {
-  it('matches snapshot', () => {
-    const tree = renderer
-      .create(<Wrapper store={store} Component={RegistrationPage} />)
-      .toJSON();
-    expect(tree).toMatchSnapshot();
+  it(' snapshot', () => {
+    const tree = renderer.create(<Wrapper store={store} Component={RegistrationPage} />);
+    expect(tree.toJSON()).toMatchSnapshot();
+    tree.unmount();
   });
 
   it('displays the heading', () => {
@@ -30,11 +30,18 @@ describe('Registration', () => {
   it('calls api to register user', async () => {
     registerUser.mockResolvedValue({ user: { email: 'test@example.com', id: 1 } });
 
-    render(<Wrapper store={store} Component={RegistrationPage} />);
-    userEvent.type(screen.getByPlaceholderText('Enter Email'), 'test.example.com');
-    userEvent.type(screen.getByPlaceholderText('Enter Password'), 'password');
-    await userEvent.click(screen.getByText('Register'));
-    await Promise.resolve();
+    act(() => {
+      render(<Wrapper store={store} Component={RegistrationPage} />);
+    });
+    act(() => {
+      userEvent.type(screen.getByPlaceholderText('Enter Email'), 'test.example.com');
+    });
+    act(() => {
+      userEvent.type(screen.getByPlaceholderText('Enter Password'), 'password');
+    });
+    act(() => {
+      userEvent.click(screen.getByText('Register'));
+    });
     expect(registerUser).toHaveBeenCalledTimes(1);
   });
 });

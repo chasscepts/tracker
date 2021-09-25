@@ -5,7 +5,15 @@ import PropTypes from 'prop-types';
 import css from '../assets/css/Stopwatch.module.css';
 import btn from '../assets/css/button.module.css';
 import sphere from '../assets/images/sphere.png';
-import timer from '../utilities/timer';
+import {
+  start,
+  stop,
+  subscribe,
+  unsubscribe,
+  isRunning,
+  getClient,
+  elapsedTime,
+} from '../utilities/timer';
 import { selectEntryPendingRequestCount, updateEntryAsync } from '../reducers/timerSlice';
 import LdsRing from './LdsRing';
 import { timeStringClock, timeString } from '../utilities/dates';
@@ -72,18 +80,17 @@ UpdatingIndicator.propTypes = {
 
 export default function Stopwatch() {
   const [elapsed, setElapsed] = useState(0);
-  const [running, setRunning] = useState(timer.running());
-  const client = timer.getClient();
+  const [running, setRunning] = useState(isRunning());
+  const client = getClient();
   const tasks = useSelector(selectTasks);
   const requestCount = useSelector(selectEntryPendingRequestCount);
   const dispatch = useDispatch();
   const { taskId: pathTaskId, id: pathId } = useParams();
 
-  const timerId = timer.subscribe((seconds) => {
-    setElapsed(seconds);
+  useEffect(() => {
+    const timerId = subscribe((secs) => setElapsed(secs));
+    return () => unsubscribe(timerId);
   });
-
-  useEffect(() => () => timer.unsubscribe(timerId));
 
   let id;
   let newRecord = false;
@@ -115,22 +122,22 @@ export default function Stopwatch() {
     if (!entry) {
       return;
     }
-    timer.start({ id: entry.id, task_id: task.id });
+    start({ id: entry.id, task_id: task.id });
     setTimeout(() => setRunning(true), 0);
   };
 
   const commit = () => {
     if (!entry) return;
-    timer.stop();
+    stop();
     setRunning(false);
-    dispatch(updateEntryAsync(entry, timer.elapsedTime(), task.title));
+    dispatch(updateEntryAsync(entry, elapsedTime(), task.title));
     if (newRecord) {
       <Redirect to={`/tasks/${pathTaskId}/entries/${pathId}`} />;
     }
   };
 
   const discard = () => {
-    timer.stop();
+    stop();
     setRunning(false);
     setElapsed(0);
     if (newRecord) {

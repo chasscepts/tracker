@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Registration matches snapshot 1`] = `
+exports[`Registration  snapshot 1`] = `
 <div
   className="container"
   style={

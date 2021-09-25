@@ -30,10 +30,9 @@ const tasks = [
 describe('Home', () => {
   it('matches snapshot', () => {
     formattedDate.mockReturnValue('September 21, 2021');
-    const tree = renderer
-      .create(<Wrapper Component={Home} />)
-      .toJSON();
-    expect(tree).toMatchSnapshot();
+    const tree = renderer.create(<Wrapper Component={Home} />);
+    expect(tree.toJSON()).toMatchSnapshot();
+    tree.unmount();
   });
 
   it('displays the date', () => {

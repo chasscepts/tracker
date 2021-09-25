@@ -1,0 +1,44 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Stopwatch matches snapshot 1`] = `
+<div
+  className="container"
+>
+  <div
+    className="stopwatch"
+  >
+    <div
+      className="handWrap"
+    >
+      <div
+        className="hand"
+      >
+        <img
+          alt="sphere"
+          className="sphere"
+          src="sphere.png"
+        />
+      </div>
+    </div>
+    <div
+      className="time"
+    >
+      00 : 00 : 00
+    </div>
+  </div>
+  <div
+    className="entryWrap"
+  >
+    No Task Selected
+  </div>
+  <div
+    className="controls"
+  >
+    <div
+      className="notSelected"
+    >
+      Please Select a Task
+    </div>
+  </div>
+</div>
+`;

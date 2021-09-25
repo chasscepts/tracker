@@ -8,17 +8,6 @@ let id = 0;
 
 let listeners = [];
 
-const subscribe = (callback) => {
-  const temp = id;
-  id += 1;
-  listeners.push({ id, callback });
-  return temp;
-};
-
-const unsubscribe = (id) => {
-  listeners = listeners.filter((l) => l.id !== id);
-};
-
 const raiseSecondElapsed = (elapsed) => {
   listeners.forEach((l) => l.callback(elapsed));
 };
@@ -39,13 +28,13 @@ const loop = (timestamp) => {
   requestAnimationFrame(loop);
 };
 
-const stop = () => {
+export const stop = () => {
   stopped = true;
   prevStamp = undefined;
   client = null;
 };
 
-const start = (params) => {
+export const start = (params) => {
   client = params;
   elapsed = 0;
   seconds = 0;
@@ -53,18 +42,22 @@ const start = (params) => {
   requestAnimationFrame(loop);
 };
 
-const resume = () => {
+export const resume = () => {
   stopped = false;
   requestAnimationFrame(loop);
 };
 
-export default {
-  start,
-  stop,
-  resume,
-  subscribe,
-  unsubscribe,
-  running: () => !stopped,
-  elapsedTime: () => seconds,
-  getClient: () => client,
+export const subscribe = (callback) => {
+  id += 1;
+  listeners.push({ id, callback });
+  return id;
 };
+
+export const unsubscribe = (id) => {
+  listeners = listeners.filter((l) => l.id !== id);
+};
+
+export const isRunning = () => !stopped;
+export const elapsedTime = () => seconds;
+export const getClient = () => client;
+export const clientCount = () => listeners.length;
